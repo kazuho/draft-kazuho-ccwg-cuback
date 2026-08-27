@@ -3,7 +3,7 @@ title: "CUBACK: CUBIC Driven by the ACK Clock"
 abbrev: "cuback"
 category: std
 docname: draft-kazuho-ccwg-cuback-latest
-workgroup: ccwg
+workgroup: "Congestion Control Working Group"
 ipr: trust200902
 keyword: internet-draft
 pi: [roc, sortrefs, symrefs]
