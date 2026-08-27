@@ -1,0 +1,163 @@
+
+
+
+
+ccwg                                                    奥 一穂 (K. Oku)
+Internet-Draft                                                    Fastly
+Intended status: Standards Track                          27 August 2026
+Expires: 28 February 2027
+
+
+                 CUBACK: CUBIC Driven by the ACK Clock
+                    draft-kazuho-ccwg-cuback-latest
+
+Abstract
+
+   This document specifies Cuback, an ACK-driven reformulation of CUBIC
+   congestion control that simplifies implementation by replacing
+   CUBIC's mutable time- and ACK-driven state with pure functions over
+   immutable per-epoch parameters.  Congestion-window growth then uses
+   the same ACK-driven mechanism as Reno.  Test vectors are provided for
+   validation.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 28 February 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Security Considerations
+   4.  IANA Considerations
+   5.  Normative References
+   Acknowledgments
+   Author's Address
+
+1.  Introduction
+
+   CUBIC [RFC9438] is a widely deployed congestion-control algorithm
+   that improves scalability over Reno by defining congestion-window
+   growth as a cubic function of elapsed time.  Its implementation,
+   however, is more complex than the growth function itself might
+   suggest.
+
+   During congestion avoidance, a CUBIC sender maintains two
+   independently evolving window estimates: the time-driven cubic window
+   and the ACK-driven Reno-friendly window.  The sender must update both
+   estimates and select the larger of the two.  In addition, because the
+   cubic window advances with wall-clock time, the sender needs mutable
+   epoch state and a state machine that pauses the cubic clock when the
+   sender ceases to be congestion-control limited and resumes it when
+   transmission becomes limited by the congestion window again.
+   Correctly maintaining these states complicates implementations and
+   their interaction with application-limited periods and other
+   congestion-control transitions.
+
+   This document specifies Cuback, an ACK-driven reformulation of CUBIC.
+   Cuback expresses both the cubic and Reno-friendly growth functions in
+   terms of the amount of data that must be acknowledged for the
+   congestion window to reach a given value.  The parameters defining
+   those functions are established at the beginning of a congestion-
+   avoidance epoch and remain immutable for the duration of that epoch.
+   Congestion-window growth can therefore be calculated from a pure
+   function of the current congestion window and the per-epoch
+   parameters, without maintaining separately evolving cubic and Reno-
+   friendly window estimates.
+
+   This formulation also eliminates the need to pause and resume a wall-
+   clock-driven CUBIC epoch.  When acknowledgments stop arriving,
+   advancement along the Cuback curves stops naturally.  The remaining
+   runtime state is essentially the same as in Reno: the sender tracks
+   how many additional bytes need to be acknowledged before increasing
+   the congestion window by one MSS.
+
+   Cuback therefore retains the characteristic growth behavior of CUBIC
+   while reducing congestion avoidance to the same ACK-driven window-
+   increase mechanism used by Reno.  In both Reno and Cuback,
+   acknowledged bytes are accumulated until enough have been received to
+   increase the congestion window by one MSS.  The difference lies only
+   in how the required number of acknowledged bytes is calculated: Reno
+   derives it directly from the current congestion window, whereas
+   Cuback obtains it by evaluating the pure functions defined in this
+   document.
+
+   This property also makes the algorithm straightforward to test: the
+   congestion-avoidance calculations can be validated directly from
+   their inputs and outputs, without exercising a sequence of state-
+   machine transitions.  This document includes test vectors for that
+   purpose.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Security Considerations
+
+   TODO Security
+
+4.  IANA Considerations
+
+   This document has no IANA actions.
+
+5.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC9438]  Xu, L., Ha, S., Rhee, I., Goel, V., and L. Eggert, Ed.,
+              "CUBIC for Fast and Long-Distance Networks", RFC 9438,
+              DOI 10.17487/RFC9438, August 2023,
+              <https://www.rfc-editor.org/info/rfc9438>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Author's Address
+
+   Kazuho Oku
+   Fastly
+   Email: kazuhooku@gmail.com
+
+   Additional contact information:
+
+      奥 一穂
+      Fastly
