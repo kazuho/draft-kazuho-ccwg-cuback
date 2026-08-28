@@ -312,9 +312,10 @@ K, A_cubic(w), and A_cubic(w + 1).
 
 Calculating a cube root to the accuracy required here is cheap. The
 approximation must be continuous in slope, adjacent evaluations being
-differenced, and one meeting that condition runs in about nine cycles on
-contemporary hardware, against roughly nine hundred to encrypt a 1460-byte
-segment through an AES-GCM-128 pipeline at 1.6 bytes per cycle. In the worst case, the window growing by one segment for every segment
+differenced, and one meeting that condition is given in {{cbrt}}. It runs in
+about nine cycles on contemporary hardware, against roughly nine hundred to
+encrypt a 1460-byte segment through an AES-GCM-128 pipeline at 1.6 bytes per
+cycle. In the worst case, the window growing by one segment for every segment
 acknowledged, the overhead is therefore around three percent of the cost of
 encrypting the data that drove it; during congestion avoidance the window
 typically grows far more slowly than that.
@@ -445,6 +446,55 @@ D(w) on the cubic curve is the difference of two cube roots taken at adjacent
 windows, so an implementation using an approximation should compare accumulated
 values, as above, rather than individual increases; see {{overhead}}.
 
+
+# An Approximation of the Cube Root {#cbrt}
+
+The cube root function below is provided for reference and is placed in the
+public domain. It assumes IEEE 754 binary64. Its maximum relative error is about
+3.5e-5 and the relative error of its slope is below 8.5e-4, holding each
+per-segment increase to roughly 0.1 percent, and it runs in about nine cycles on
+a Zen 3 core.
+
+~~~
+#define DBL2BITS(x) (((union { double f; uint64_t u; }){x}).u)
+#define BITS2DBL(x) (((union { uint64_t u; double f; }){x}).f)
+
+double approx_cbrt(double x)
+{
+    uint64_t u = DBL2BITS(x);
+    uint64_t abs_u = u & 0x7fffffffffffffff;
+    uint64_t exp = abs_u >> 52;
+
+    if (abs_u == 0)
+        return x;
+    if (exp == 0 || exp == 0x7ff)
+        return cbrt(x);
+
+    int e = (int)exp - 1023;
+    int q = e / 3;
+    int r = e - 3 * q;
+    if (r < 0) {
+        r += 3;
+        --q;
+    }
+
+    uint64_t mant = abs_u & 0xfffffffffffff;
+    double m = BITS2DBL(mant | ((uint64_t)1023 << 52));
+
+    double y = -0.010279630422175424;
+    y = 0.08469719299100167 + m * y;
+    y = -0.2988437245358902 + m * y;
+    y = 0.7177663288981584 + m * y;
+    y = 0.5066598330689034 + m * y;
+
+    static const double cbrt2_to_r[3] = {1.0, 1.2599210498948731648,
+                                         1.5874010519681994748};
+    double two_to_q = BITS2DBL((uint64_t)(q + 1023) << 52);
+
+    y *= cbrt2_to_r[r] * two_to_q;
+    return (u >> 63) ? -y : y;
+}
+~~~
 
 # Acknowledgments
 {:numbered="false"}
