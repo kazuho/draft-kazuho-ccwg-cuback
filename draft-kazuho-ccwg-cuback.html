@@ -1463,8 +1463,8 @@ clock running. W_cubic(t) advances while the flow is not filling cwnd, and cwnd
 grows on evidence the path never supplied; <span><a href="https://rfc-editor.org/rfc/rfc9438#section-5.8" class="relref">Section 5.8</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> names the
 consequence, that W_cubic(t) "might be very high after restarting from these
 periods". Treating a congestion-window-limited sender as application limited
-stops the clock instead, abandoning the epoch and re-anchoring it when sending
-resumes, so the flow forfeits its progress along the curve and grows too slowly.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+stops the clock instead, so the elapsed time that should have advanced the curve
+is never accrued and the flow grows too slowly.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.3-3">Neither state is directly observable: a sender that has filled its output batch
 is sending, but that does not establish that it filled its congestion window,
 and a paced sender waiting for its next send opportunity has filled the window
