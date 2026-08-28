@@ -9,9 +9,9 @@
 <meta content="
        This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters.
-Congestion-window growth then uses the same ACK-driven mechanism as Reno. Test
-vectors are provided for validation. 
+ACK-driven state with pure functions over immutable per-epoch parameters,
+removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
+mechanism as Reno. Test vectors are provided for validation. 
     " name="description">
 <meta content="xml2rfc 3.34.0" name="generator">
 <meta content="internet-draft" name="keyword">
@@ -1083,9 +1083,9 @@ svg {
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters.
-Congestion-window growth then uses the same ACK-driven mechanism as Reno. Test
-vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+ACK-driven state with pure functions over immutable per-epoch parameters,
+removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
+mechanism as Reno. Test vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1263,10 +1263,12 @@ enough have been received to increase the congestion window by one MSS. The
 difference lies only in how the required number of acknowledged bytes is
 calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">This property also makes the algorithm straightforward to test: the
-congestion-avoidance calculations can be validated directly from their inputs
-and outputs, without exercising a sequence of state-machine transitions. This
-document includes test vectors for that purpose.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">What remains of CUBIC's complexity is then confined to a pure function of the
+congestion window and the per-epoch parameters, which can be validated directly
+from its inputs and outputs without exercising a sequence of state-machine
+transitions. An implementation can therefore be checked against known values,
+and is correspondingly less prone to error. This document includes test vectors for
+that purpose.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
 specified in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> applies unchanged.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
