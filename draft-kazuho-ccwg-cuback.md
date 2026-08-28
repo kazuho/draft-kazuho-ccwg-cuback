@@ -194,14 +194,15 @@ bandwidth, and cwnd_epoch to the values they held before the event.
 
 ## Application-Limited Senders {#app-limited}
 
-The application-limited handling required by {{Section 4.2 of CUBIC}} has no
-counterpart in Cuback, there being no clock to pause and resume.
+The application-limited clock handling required by {{Section 4.2 of CUBIC}} has
+no counterpart in Cuback, there being no clock to pause and resume.
 
 The rules of {{?I-D.ietf-ccwg-ratelimited-increase}}, which update {{CUBIC}},
 bound the increase of a rate-limited sender without any determination of its
 state. Even without them, growth is governed by acknowledged data rather than by
-elapsed time, and cwnd therefore stays closer to what the path has delivered
-than it does under {{CUBIC}}; see {{clock-timing}}.
+elapsed time: an idle sender accrues no growth, while a sender that continues to
+deliver data below cwnd grows only in proportion to that delivered data; see
+{{clock-timing}}.
 
 # Relationship to RFC 9438 {#relationship}
 
