@@ -304,9 +304,10 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
 
    Section 4.2 of [CUBIC] requires that elapsed time exclude periods
    during which cwnd was not updated because the sender was application
-   limited.  A CUBIC sender therefore has to classify each moment as one
-   state or the other, and the classification can be wrong in either
-   direction.
+   limited.  A CUBIC sender therefore has to pause its clock as the flow
+   becomes application limited and resume it as the flow ceases to be,
+   and an error at either edge is an error in the elapsed time the curve
+   is read against.
 
    Treating an application-limited sender as congestion-window limited
    leaves the clock running.  W_cubic(t) advances while the flow is not
@@ -317,13 +318,16 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
    clock instead, so the elapsed time that should have advanced the
    curve is never accrued and the flow grows too slowly.
 
-   Neither state is directly observable: a sender that has filled its
-   output batch is sending, but that does not establish that it filled
-   its congestion window, and a paced sender waiting for its next send
-   opportunity has filled the window but is not sending at that instant.
-   Tracking the state precisely enough for CUBIC has needed a
-   specification of its own, now written down in
-   [I-D.ietf-ccwg-ratelimited-increase], which updates [CUBIC].
+   Neither edge is easy to observe.  A sender might emit as many
+   datagrams as it can in one pass and so appear limited by the
+   congestion controller, even though its bytes in flight are below
+   cwnd.  Conversely, an in-stack pacer might withhold emission after a
+   train of acknowledgements, leaving bytes in flight below cwnd
+   although the connection is still limited by the congestion window.
+   [I-D.ietf-ccwg-ratelimited-increase] updates [CUBIC], mitigating the
+   impact of such overgrowth by capping cwnd at a value derived from the
+   largest FlightSize observed, but a CUBIC sender is still required to
+   pause and resume its clock at the correct moments.
 
    Cuback has no clock to stop or start.  When the sender stops, the
    advance of A(w) stops with it: no acknowledgements arrive, and
