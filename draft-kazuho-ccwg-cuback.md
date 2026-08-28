@@ -299,6 +299,30 @@ Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, s
 a gap in acknowledgements accrues no growth to be caught up, and the increase is
 proportional to the ack stream by construction.
 
+## Calculation Overhead {#overhead}
+
+A_reno is arithmetic, but A_cubic requires a cube root. {{CUBIC}} evaluates one
+when the epoch begins, to obtain K, and thereafter only cubes; Cuback evaluates
+one whenever it computes D(w).
+
+Storing the data still needed to increase the window by one segment, rather than
+recomputing D(w) on every acknowledgement, moves the evaluation from once per
+acknowledgement to once per increase. Each increase then evaluates three roots:
+K, A_cubic(w), and A_cubic(w + 1).
+
+Calculating a cube root to the accuracy required here is cheap. The
+approximation must be continuous in slope, adjacent evaluations being
+differenced, and one meeting that condition runs in about nine cycles on
+contemporary hardware, against roughly nine hundred to encrypt a 1460-byte
+segment through an AES-GCM-128 pipeline at 1.6 bytes per cycle. In the worst case, the window growing by one segment for every segment
+acknowledged, the overhead is therefore around three percent of the cost of
+encrypting the data that drove it; during congestion avoidance the window
+typically grows far more slowly than that.
+
+Furthermore, K is fixed for the duration of the epoch and could be retained
+rather than recomputed, and A(w + 1) for one increase is A(w) for the next and
+could be carried forward. Together these leave a single cube root per increase.
+
 # Security Considerations {#security}
 
 TODO Security
