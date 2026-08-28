@@ -323,6 +323,61 @@ Furthermore, K is fixed for the duration of the epoch and could be retained
 rather than recomputed, and A(w + 1) for one increase is A(w) for the next and
 could be carried forward. Together these leave a single cube root per increase.
 
+# Test Vectors {#vectors}
+
+A(w) and D(w) are pure functions of the congestion window and the parameters of
+{{ca}}, so they can be checked directly. Both vectors below use the recommended
+constants, with alpha_cubic taken as 3 * (1 - beta_cubic) / (1 + beta_cubic)
+rather than the rounded 0.529.
+
+The first exercises the Reno-friendly curve. bandwidth is large enough here that
+A_cubic exceeds A_reno at every window shown, so A(w) is A_reno(w) throughout.
+The window reaches cwnd_prior at 10 segments, where alpha_cubic is replaced by
+one and each further segment costs exactly its own window in acknowledged data.
+
+~~~
+cwnd_epoch = 7 segments
+cwnd_prior = 10 segments
+W_max      = 10 segments
+RTT        = 0.1 s
+bandwidth  = 100 segments/s
+
+   w      A(w)      D(w)
+   7    0.0000   13.2222
+   8   13.2222   15.1111
+   9   28.3333   17.0000
+  10   45.3333   10.0000
+  11   55.3333   11.0000
+  12   66.3333
+~~~
+
+The second exercises the cubic curve, the parameters being chosen so that K is
+exactly 10 seconds. A_reno exceeds A_cubic at every window shown, so A(w) is
+A_cubic(w) throughout. A(W_max) divided by bandwidth recovers K, and the data
+needed to climb the 50 segments below W_max equals that needed for the 50 above,
+the curve being point-symmetric about W_max.
+
+~~~
+cwnd_epoch = 600 segments
+cwnd_prior = 1000 segments
+W_max      = 1000 segments
+RTT        = 0.1 s
+bandwidth  = 10000 segments/s
+K          = 10 s
+
+      w        A(w)
+    600           0
+    950      50 000
+   1000     100 000
+   1050     150 000
+   1400     200 000
+~~~
+
+D(w) on the cubic curve is the difference of two cube roots taken at adjacent
+windows, so an implementation using an approximation should compare accumulated
+values, as above, rather than individual increases; see {{overhead}}.
+
+
 # Security Considerations {#security}
 
 TODO Security
