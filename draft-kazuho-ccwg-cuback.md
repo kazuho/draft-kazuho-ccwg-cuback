@@ -174,12 +174,15 @@ The expressions above are derived in {{derivation}}.
 ## Fast Convergence {#fast-convergence}
 
 Fast convergence is applied as described in {{Section 4.7 of CUBIC}}: on a
-congestion event, if cwnd is below W_max, W_max is set to
-cwnd * (1 + beta_cubic) / 2 before the window is reduced. A_reno in {{ca}} then
-uses
-cwnd_prior, which is cwnd_epoch / beta_cubic, in place of W_max, {{Section 4.3
-of CUBIC}} keying the switch to alpha_cubic = 1 to cwnd_prior rather than to
-W_max.
+congestion event, if cwnd is below W_max, W_max is reduced before cwnd is:
+
+~~~
+W_max = cwnd * (1 + beta_cubic) / 2
+~~~
+
+{{Section 4.3 of CUBIC}} keys the switch to alpha_cubic = 1 to cwnd_prior rather
+than to W_max, so A_reno in {{ca}} uses cwnd_prior in its place; a sender that
+does not retain it can recover it as cwnd_epoch / beta_cubic.
 
 ## Spurious Congestion Events {#spurious}
 
@@ -217,9 +220,13 @@ exactly, and no look-ahead is required.
 
 ## The Reno-Friendly Estimate {#reno-estimate}
 
-{{Section 4.3 of CUBIC}} advances W_est by
-alpha_cubic * segments_acked / cwnd, where cwnd is the congestion window in
-effect. While the cubic curve governs, that window is larger than W_est, so the
+{{Section 4.3 of CUBIC}} advances W_est on each acknowledgement:
+
+~~~
+W_est = W_est + alpha_cubic * segments_acked / cwnd
+~~~
+
+where cwnd is the congestion window in effect. While the cubic curve governs, that window is larger than W_est, so the
 growth of W_est depends on the trajectory of the other curve. This coupling
 cannot be expressed as a function of W_est alone, and A_reno instead inverts the
 standalone recurrence, in which the divisor is the Reno-friendly window itself.
@@ -324,9 +331,14 @@ zero at w = cwnd_epoch follows from the definition of K.
 
 Sampling bandwidth as cwnd_prior / RTT is the rate at which the flow was
 delivering data over the round trip preceding the congestion event. It carries
-the identity bandwidth * RTT = cwnd_prior: while the congestion window is at
-cwnd_prior, one round trip of acknowledgements advances A(w) by exactly one
-round trip along the underlying cubic curve.
+an identity:
+
+~~~
+bandwidth * RTT = cwnd_prior
+~~~
+
+While the congestion window is at cwnd_prior, one round trip of acknowledgements
+advances A(w) by exactly one round trip along the underlying cubic curve.
 
 A_reno is the inverse of the Reno-friendly increase of {{Section 4.3 of
 CUBIC}}: one segment for every cwnd / alpha_cubic segments acknowledged,
