@@ -1,7 +1,7 @@
 ---
 title: "CUBACK: CUBIC Driven by the ACK Clock"
 abbrev: "cuback"
-category: std
+category: exp
 docname: draft-kazuho-ccwg-cuback-latest
 workgroup: "Congestion Control Working Group"
 ipr: trust200902
@@ -204,19 +204,24 @@ Unlike in {{CUBIC}}, this is not mandatory, Cuback being ack-clocked. See
 
 bandwidth scales A_cubic linearly, so an error in it is an error in the rate at
 which the cubic curve is traversed: an underestimate traverses the curve more
-quickly than elapsed time would, and an overestimate more slowly. Cuback is
-therefore sensitive to the smoothed round-trip time from which bandwidth is
-derived, which has to describe the path as it was while cwnd was at its peak,
-with the bottleneck queue at its deepest. A round-trip time carried over from a period
-when the queue was shallower is too short and overstates bandwidth, leading to
-growth more conservative than the cubic curve prescribes.
+quickly than elapsed time would, and an overestimate more slowly. The
+round-trip time it is derived from has to describe the path as it was while cwnd
+was at its peak, with the bottleneck queue at its deepest.
 
-The sensitivity is confined to windows large enough for the cubic curve to
-govern, A_reno carrying no bandwidth term. Windows that large deliver many
-acknowledgements per round trip, and a QUIC sender takes a round-trip sample
-from every acknowledgement that advances the largest acknowledged packet number
-{{?RFC9002}}, so the smoothed round-trip time can be assumed to follow the queue
-closely by the time the estimate matters.
+The error is bounded in either direction by mechanisms already present. An
+overstated bandwidth makes A_cubic large, and A_reno carries no bandwidth term
+at all, so A(w) becomes A_reno(w): the flow then grows at the Reno-friendly
+rate, and no error in bandwidth can slow it below that. An understated bandwidth
+makes A_cubic small, and the lower bound of two segments on D(w) caps growth at
+half the congestion window per round trip, which {{CUBIC}} adopts to keep the
+increase below that of slow start.
+
+Between those bounds the estimate matters only at windows large enough for the
+cubic curve to govern. Windows that large deliver many acknowledgements per
+round trip, and a QUIC sender takes a round-trip sample from every
+acknowledgement that advances the largest acknowledged packet number
+{{?RFC9002}}, so the smoothed round-trip time follows the path closely by the
+time the estimate matters.
 
 ## Convergence under the ACK Clock {#convergence}
 
