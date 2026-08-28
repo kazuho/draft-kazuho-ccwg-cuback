@@ -1049,7 +1049,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Oku</td>
-<td class="center">Expires 28 February 2027</td>
+<td class="center">Expires 1 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1057,17 +1057,17 @@ svg {
 <div id="internal-metadata" class="document-information">
 <dl id="identifiers">
 <dt class="label-workgroup">Workgroup:</dt>
-<dd class="workgroup">ccwg</dd>
+<dd class="workgroup">Congestion Control Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
 <dd class="internet-draft">draft-kazuho-ccwg-cuback-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-27" class="published">27 August 2026</time>
+<time datetime="2026-08-28" class="published">28 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-02-28">28 February 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-01">1 March 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1086,6 +1086,17 @@ control that simplifies implementation by replacing CUBIC's mutable time- and
 ACK-driven state with pure functions over immutable per-epoch parameters.
 Congestion-window growth then uses the same ACK-driven mechanism as Reno. Test
 vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-discussion-venues">
+<a href="#name-discussion-venues" class="section-name selfRef">Discussion Venues</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">Discussion of this document takes place on the
+    Congestion Control Working Group Working Group mailing list (ccwg@ietf.org),
+    which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/ccwg/">https://mailarchive.ietf.org/arch/browse/ccwg/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">Source for this draft and an issue tracker can be found at
+    <span><a href="https://github.com/kazuho/draft-kazuho-ccwg-cuback">https://github.com/kazuho/draft-kazuho-ccwg-cuback</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1106,7 +1117,7 @@ vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1142,19 +1153,64 @@ vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-cuback-congestion-avoidance" class="internal xref">Cuback Congestion Avoidance</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-fast-convergence" class="internal xref">Fast Convergence</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-spurious-congestion-events" class="internal xref">Spurious Congestion Events</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-application-limited-senders" class="internal xref">Application-Limited Senders</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-relationship-to-rfc-9438" class="internal xref">Relationship to RFC 9438</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-sensitivity-to-the-bandwidt" class="internal xref">Sensitivity to the Bandwidth Estimate</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-convergence-under-the-ack-c" class="internal xref">Convergence under the ACK Clock</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-sensitivity-to-application-" class="internal xref">Sensitivity to Application-Limited State</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-the-reno-friendly-estimate" class="internal xref">The Reno-Friendly Estimate</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-smoothing-the-cubic-growth" class="internal xref">Smoothing the Cubic Growth</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-derivation-of-the-increase-" class="internal xref">Derivation of the Increase Function</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1165,9 +1221,9 @@ vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">CUBIC <span>[<a href="#RFC9438" class="cite xref">RFC9438</a>]</span> is a widely deployed congestion-control algorithm that
-improves scalability over Reno by defining congestion-window growth as a cubic
-function of elapsed time. Its implementation, however, is more complex than the
+<p id="section-1-1">CUBIC <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> is a widely deployed congestion-control algorithm that
+improves scalability over Reno <span>[<a href="#RENO" class="cite xref">RENO</a>]</span> by defining congestion-window
+growth as a cubic function of elapsed time. Its implementation, however, is more complex than the
 growth function itself might suggest.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">During congestion avoidance, a CUBIC sender maintains two independently evolving
 window estimates: the time-driven cubic window and the ACK-driven Reno-friendly
@@ -1202,6 +1258,8 @@ Cuback obtains it by evaluating the pure functions defined in this document.<a h
 congestion-avoidance calculations can be validated directly from their inputs
 and outputs, without exercising a sequence of state-machine transitions. This
 document includes test vectors for that purpose.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
+specified in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> applies unchanged.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1213,55 +1271,381 @@ document includes test vectors for that purpose.<a href="#section-1-6" class="pi
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">This document uses the notation of <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, in which window sizes are
+expressed in segments. An implementation that counts bytes instead scales each
+window value by SMSS, divides the sums appearing in <a href="#ca" class="auto internal xref">Section 3</a> by SMSS, and
+expresses the lower bound on D(w) as 2 * SMSS.<a href="#section-2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ca">
+<section id="section-3">
+      <h2 id="name-cuback-congestion-avoidance">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-cuback-congestion-avoidance" class="section-name selfRef">Cuback Congestion Avoidance</a>
+      </h2>
+<p id="section-3-1">During congestion avoidance, a Reno sender accumulates the data acknowledged and
+increases cwnd by one segment each time a threshold D(cwnd) is reached:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-2">
+<pre>
+on entering congestion avoidance:
+  pending = 0
+
+on receiving an acknowledgement, while cwnd &gt;= ssthresh:
+  pending = pending + segments_acked
+  while pending &gt;= D(cwnd):
+    pending = pending - D(cwnd)
+    cwnd = cwnd + 1
+</pre><a href="#section-3-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3-3">In Reno, that threshold is the congestion window itself:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-4">
+<pre>
+D_reno(cwnd) = cwnd
+</pre><a href="#section-3-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3-5">Cuback retains the mechanism above unchanged and replaces only the threshold,
+where A(w) is the amount of data, counted from the beginning of the current
+congestion avoidance stage, that has to be acknowledged for the congestion
+window to reach w:<a href="#section-3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-6">
+<pre>
+D(w)       = max(2, A(w + 1) - A(w))
+
+A(w)       = min(A_cubic(w), A_reno(w))
+
+A_cubic(w) = bandwidth * (K(W_max, cwnd_epoch) + cbrt((w - W_max) / C))
+
+A_reno(w)  = (w - cwnd_epoch) * (w + cwnd_epoch - 1)
+               / (2 * alpha_cubic)                            w &lt;= W_max
+
+           = (W_max - cwnd_epoch) * (W_max + cwnd_epoch - 1)
+               / (2 * alpha_cubic)
+             + (w - W_max) * (w + W_max - 1) / 2              w &gt;  W_max
+
+K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
+</pre><a href="#section-3-6" class="pilcrow">¶</a>
+</div>
+<p id="section-3-7">W_max, bandwidth, and cwnd_epoch are fixed when the congestion avoidance stage
+begins and do not change until the next congestion event:<a href="#section-3-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-8.1">
+          <p id="section-3-8.1.1">W_max is as defined in <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.1.2" class="relref">Section 4.1.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>. It is set to cwnd_prior,
+the congestion window before the reduction at the congestion event that began
+the stage.<a href="#section-3-8.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-8.2">
+          <p id="section-3-8.2.1">bandwidth is an estimate of the rate at which the bottleneck delivers data, in
+segments per second. It is set at the congestion event to cwnd_prior divided
+by the smoothed round-trip time.<a href="#section-3-8.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-8.3">
+          <p id="section-3-8.3.1">cwnd_epoch is the congestion window at the beginning of the congestion
+avoidance stage, as defined in <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.1.2" class="relref">Section 4.1.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>.<a href="#section-3-8.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-3-9">alpha_cubic, beta_cubic, and C are the constants defined in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, with
+recommended values:<a href="#section-3-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-10">
+<pre>
+beta_cubic  = 0.7
+alpha_cubic = 0.529  # 3 * (1 - beta_cubic) / (1 + beta_cubic)
+C           = 0.4
+</pre><a href="#section-3-10" class="pilcrow">¶</a>
+</div>
+<p id="section-3-11">A sender that derives ssthresh from flight_size rather than from cwnd
+(<span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.6" class="relref">Section 4.6</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>) <span class="bcp14">MUST</span> use flight_size in place of cwnd_prior
+throughout this section. W_max, cwnd_epoch, and bandwidth <span class="bcp14">MUST</span> be derived from
+the same quantity.<a href="#section-3-11" class="pilcrow">¶</a></p>
+<p id="section-3-12">When congestion avoidance is entered without a congestion event, such as on
+exiting slow start, the parameters are established at that point instead. cwnd
+is not reduced, so W_max equals cwnd_epoch and K is zero, and A(w) describes
+growth along the convex region alone.<a href="#section-3-12" class="pilcrow">¶</a></p>
+<p id="section-3-13">The expressions above are derived in <a href="#derivation" class="auto internal xref">Appendix A</a>.<a href="#section-3-13" class="pilcrow">¶</a></p>
+<div id="fast-convergence">
+<section id="section-3.1">
+        <h3 id="name-fast-convergence">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-fast-convergence" class="section-name selfRef">Fast Convergence</a>
+        </h3>
+<p id="section-3.1-1">Fast convergence is applied as described in <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.7" class="relref">Section 4.7</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>: on a
+congestion event, if cwnd is below W_max, W_max is reduced before cwnd is:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-2">
+<pre>
+W_max = cwnd * (1 + beta_cubic) / 2
+</pre><a href="#section-3.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-3"><span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.3" class="relref">Section 4.3</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> keys the switch to alpha_cubic = 1 to cwnd_prior rather
+than to W_max, so A_reno in <a href="#ca" class="auto internal xref">Section 3</a> uses cwnd_prior in its place; a sender that
+does not retain it can recover it as cwnd_epoch / beta_cubic.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="spurious">
+<section id="section-3.2">
+        <h3 id="name-spurious-congestion-events">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-spurious-congestion-events" class="section-name selfRef">Spurious Congestion Events</a>
+        </h3>
+<p id="section-3.2-1">When a congestion event is determined to have been spurious (<span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.9" class="relref">Section 4.9</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>), a sender that reverts cwnd and ssthresh <span class="bcp14">MUST</span> also restore W_max,
+bandwidth, and cwnd_epoch to the values they held before the event.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="app-limited">
+<section id="section-3.3">
+        <h3 id="name-application-limited-senders">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-application-limited-senders" class="section-name selfRef">Application-Limited Senders</a>
+        </h3>
+<p id="section-3.3-1">A sender that can detect application-limited periods <span class="bcp14">SHOULD</span> refrain from
+increasing cwnd during them.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">Unlike in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, this is not mandatory, Cuback being ack-clocked. See
+<a href="#app-limited-sensitivity" class="auto internal xref">Section 4.3</a>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="relationship">
+<section id="section-4">
+      <h2 id="name-relationship-to-rfc-9438">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-relationship-to-rfc-9438" class="section-name selfRef">Relationship to RFC 9438</a>
+      </h2>
+<div id="sensitivity">
+<section id="section-4.1">
+        <h3 id="name-sensitivity-to-the-bandwidt">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-sensitivity-to-the-bandwidt" class="section-name selfRef">Sensitivity to the Bandwidth Estimate</a>
+        </h3>
+<p id="section-4.1-1">bandwidth scales A_cubic linearly, so an error in it is an error in the rate at
+which the cubic curve is traversed: an underestimate traverses the curve more
+quickly than elapsed time would, and an overestimate more slowly. Cuback is
+therefore sensitive to the smoothed round-trip time from which bandwidth is
+derived, which has to describe the path as it was while cwnd was at its peak,
+with the bottleneck queue at its deepest. A round-trip time carried over from a period
+when the queue was shallower is too short and overstates bandwidth, leading to
+growth more conservative than the cubic curve prescribes.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The sensitivity is confined to windows large enough for the cubic curve to
+govern, A_reno carrying no bandwidth term. Windows that large deliver many
+acknowledgements per round trip, and a QUIC sender takes a round-trip sample
+from every acknowledgement that advances the largest acknowledged packet number
+<span>[<a href="#RFC9002" class="cite xref">RFC9002</a>]</span>, so the smoothed round-trip time can be assumed to follow the queue
+closely by the time the estimate matters.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="convergence">
+<section id="section-4.2">
+        <h3 id="name-convergence-under-the-ack-c">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-convergence-under-the-ack-c" class="section-name selfRef">Convergence under the ACK Clock</a>
+        </h3>
+<p id="section-4.2-1">Deriving the clock from acknowledgements reinforces the convergence that AIMD
+provides, because bandwidth records the rate the flow was achieving before it
+reduced. A flow holding a large share gives up the most at a congestion
+event, so the rate it goes on to achieve falls below the value it recorded and
+its clock runs slow. A flow arriving with a small share records a correspondingly
+small rate and then achieves more than it recorded, so its clock runs fast. The
+congestion window advances fastest for the flow gaining share and slowest for
+the one giving it up.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="app-limited-sensitivity">
+<section id="section-4.3">
+        <h3 id="name-sensitivity-to-application-">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-sensitivity-to-application-" class="section-name selfRef">Sensitivity to Application-Limited State</a>
+        </h3>
+<p id="section-4.3-1"><span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> requires that elapsed time exclude periods during which
+cwnd was not updated because the sender was application limited. A CUBIC sender
+therefore has to classify each moment as one state or the other, and the
+classification can be wrong in either direction.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Treating an application-limited sender as congestion-window limited leaves the
+clock running. W_cubic(t) advances while the flow is not filling cwnd, and cwnd
+grows on evidence the path never supplied; <span><a href="https://rfc-editor.org/rfc/rfc9438#section-5.8" class="relref">Section 5.8</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> names the
+consequence, that W_cubic(t) "might be very high after restarting from these
+periods". Treating a congestion-window-limited sender as application limited
+stops the clock instead, abandoning the epoch and re-anchoring it when sending
+resumes, so the flow forfeits its progress along the curve and grows too slowly.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">Neither state is directly observable: a sender that has filled its output batch
+is sending, but that does not establish that it filled its congestion window,
+and a paced sender waiting for its next send opportunity has filled the window
+but is not sending at that instant. Tracking the state precisely enough for
+CUBIC has needed a specification of its own, now written down in
+<span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span>, which updates <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">Cuback has no clock to stop or start. When the sender stops, the advance of A(w)
+stops with it: no acknowledgements arrive, and nothing accrues to be caught up
+when transmission resumes. The case in which a misclassifying CUBIC sender is
+most exposed therefore does not arise.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.3-5">A sender that keeps sending but holds less than cwnd in flight is mitigated
+rather than protected. Growth is governed by the amount of data acknowledged, as
+in Reno, so the window advances in proportion to what the flow placed in flight
+rather than in proportion to elapsed time.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="reno-estimate">
+<section id="section-4.4">
+        <h3 id="name-the-reno-friendly-estimate">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-the-reno-friendly-estimate" class="section-name selfRef">The Reno-Friendly Estimate</a>
+        </h3>
+<p id="section-4.4-1"><span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.3" class="relref">Section 4.3</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> advances W_est on each acknowledgement:<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-2">
+<pre>
+W_est = W_est + alpha_cubic * segments_acked / cwnd
+</pre><a href="#section-4.4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-3">where cwnd is the congestion window in effect. While the cubic curve governs, that window is larger than W_est, so the
+growth of W_est depends on the trajectory of the other curve. This coupling
+cannot be expressed as a function of W_est alone, and A_reno instead inverts the
+standalone recurrence, in which the divisor is the Reno-friendly window itself.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-4">Where A_reno is the smaller of the two curves, cwnd is the Reno-friendly window
+and the two formulations coincide exactly: both increase the window by one
+segment for every cwnd / alpha_cubic segments acknowledged. They differ only in
+where that region is entered. Because the standalone recurrence uses the smaller
+divisor, it advances faster while the cubic curve governs, and a Cuback sender
+enters the Reno-friendly region somewhat earlier than a sender following
+<span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="smoothing">
+<section id="section-4.5">
+        <h3 id="name-smoothing-the-cubic-growth">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-smoothing-the-cubic-growth" class="section-name selfRef">Smoothing the Cubic Growth</a>
+        </h3>
+<p id="section-4.5-1"><span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.4" class="relref">Section 4.4</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.5" class="relref">Section 4.5</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> advance cwnd toward a
+target one round trip ahead, W_cubic(t + RTT), rather than assigning W_cubic(t) to cwnd directly.
+Because the CUBIC curve is driven by elapsed time, the growth owed at an
+acknowledgement depends on how long has passed since the previous one, and
+assigning the curve directly would turn a gap in acknowledgements into a step in
+cwnd, which is a burst. The one-round-trip target, together with the
+per-acknowledgement increase of (target - cwnd) / cwnd, spreads one round trip
+of the curve across one round trip of acknowledgements, making the increase
+proportional to the data acknowledged however the acknowledgements are
+distributed in time.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-2">Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, so
+a gap in acknowledgements accrues no growth to be caught up, and the increase is
+proportional to the ack stream by construction.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security">
-<section id="section-3">
+<section id="section-5">
       <h2 id="name-security-considerations">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-3-1">TODO Security<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">TODO Security<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
-<section id="section-4">
+<section id="section-6">
       <h2 id="name-iana-considerations">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-4-1">This document has no IANA actions.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">This document has no IANA actions.<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
-<section id="section-5">
-      <h2 id="name-normative-references">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<div id="sec-combined-references">
+<section id="section-7">
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
+<dt id="CUBIC">[CUBIC]</dt>
+        <dd>
+<span class="refAuthor">Xu, L.</span>, <span class="refAuthor">Ha, S.</span>, <span class="refAuthor">Rhee, I.</span>, <span class="refAuthor">Goel, V.</span>, and <span class="refAuthor">L. Eggert, Ed.</span>, <span class="refTitle">"CUBIC for Fast and Long-Distance Networks"</span>, <span class="seriesInfo">RFC 9438</span>, <span class="seriesInfo">DOI 10.17487/RFC9438</span>, <time datetime="2023-08" class="refDate">August 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9438">https://www.rfc-editor.org/rfc/rfc9438</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9438">[RFC9438]</dt>
-    <dd>
-<span class="refAuthor">Xu, L.</span>, <span class="refAuthor">Ha, S.</span>, <span class="refAuthor">Rhee, I.</span>, <span class="refAuthor">Goel, V.</span>, and <span class="refAuthor">L. Eggert, Ed.</span>, <span class="refTitle">"CUBIC for Fast and Long-Distance Networks"</span>, <span class="seriesInfo">RFC 9438</span>, <span class="seriesInfo">DOI 10.17487/RFC9438</span>, <time datetime="2023-08" class="refDate">August 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9438">https://www.rfc-editor.org/info/rfc9438</a>&gt;</span>. </dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="sec-informative-references">
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-ccwg-ratelimited-increase">[I-D.ietf-ccwg-ratelimited-increase]</dt>
+        <dd>
+<span class="refAuthor">Welzl, M.</span>, <span class="refAuthor">Henderson, T.</span>, <span class="refAuthor">Fairhurst, G.</span>, and <span class="refAuthor">M. P. Tahiliani</span>, <span class="refTitle">"Increase of the Congestion Window when the Sender Is Rate-Limited"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ccwg-ratelimited-increase-10</span>, <time datetime="2026-08-21" class="refDate">21 August 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-10">https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-10</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RENO">[RENO]</dt>
+        <dd>
+<span class="refAuthor">Allman, M.</span>, <span class="refAuthor">Paxson, V.</span>, and <span class="refAuthor">E. Blanton</span>, <span class="refTitle">"TCP Congestion Control"</span>, <span class="seriesInfo">RFC 5681</span>, <span class="seriesInfo">DOI 10.17487/RFC5681</span>, <time datetime="2009-09" class="refDate">September 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5681">https://www.rfc-editor.org/rfc/rfc5681</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9002">[RFC9002]</dt>
+      <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">I. Swett, Ed.</span>, <span class="refTitle">"QUIC Loss Detection and Congestion Control"</span>, <span class="seriesInfo">RFC 9002</span>, <span class="seriesInfo">DOI 10.17487/RFC9002</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9002">https://www.rfc-editor.org/rfc/rfc9002</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="derivation">
 <section id="appendix-A">
+      <h2 id="name-derivation-of-the-increase-">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-derivation-of-the-increase-" class="section-name selfRef">Derivation of the Increase Function</a>
+      </h2>
+<p id="appendix-A-1">The lower bound of two segments in D(w) limits the increase to one half of the
+congestion window per round trip: cwnd segments are acknowledged per round trip,
+and each one-segment increase consumes at least two of them. It is the
+counterpart of the constraint target &lt;= 1.5 * cwnd in <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.4" class="relref">Section 4.4</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>
+and <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.5" class="relref">Section 4.5</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>. No lower bound on the increase is needed, as A(w)
+is monotonically
+increasing and D(w) is therefore always positive.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">CUBIC sets its congestion window to the larger of two window growth functions.
+Both are monotonically increasing, so their maximum is monotonically increasing
+as well, and the inverse of that maximum is the minimum of the two inverses.
+A(w) is therefore obtained by inverting each function separately and taking the
+smaller of the two results.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">A_cubic is the inverse of W_cubic(t) of <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, multiplied
+by bandwidth to express elapsed time as acknowledged data. That the curve is
+zero at w = cwnd_epoch follows from the definition of K.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<p id="appendix-A-4">Sampling bandwidth as cwnd_prior / RTT is the rate at which the flow was
+delivering data over the round trip preceding the congestion event. It carries
+an identity:<a href="#appendix-A-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-5">
+<pre>
+bandwidth * RTT = cwnd_prior
+</pre><a href="#appendix-A-5" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A-6">While the congestion window is at cwnd_prior, one round trip of acknowledgements
+advances A(w) by exactly one round trip along the underlying cubic curve.<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+<p id="appendix-A-7">A_reno is the inverse of the Reno-friendly increase of <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.3" class="relref">Section 4.3</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>: one segment for every cwnd / alpha_cubic segments acknowledged,
+with alpha_cubic replaced by one once the window reaches W_max. Summing those
+thresholds over the segment-spaced windows from cwnd_epoch to w yields the
+expression in <a href="#ca" class="auto internal xref">Section 3</a>.<a href="#appendix-A-7" class="pilcrow">¶</a></p>
+<p id="appendix-A-8">Differencing A_reno recovers exactly the threshold from which it was built:<a href="#appendix-A-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-9">
+<pre>
+A_reno(w + 1) - A_reno(w) = w / alpha_cubic
+</pre><a href="#appendix-A-9" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A-10">The Reno-friendly region is therefore not a separate mechanism in Cuback. It is
+the value that D(w) takes wherever A_reno is the smaller of the two curves. The
+closed form exists only so that the two curves can be compared.<a href="#appendix-A-10" class="pilcrow">¶</a></p>
+<p id="appendix-A-11">Differencing A_cubic eliminates K, so an implementation need not evaluate it
+when the cubic curve is the smaller of the two:<a href="#appendix-A-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-12">
+<pre>
+A_cubic(w + 1) - A_cubic(w)
+  = bandwidth * (cbrt((w + 1 - W_max) / C) - cbrt((w - W_max) / C))
+</pre><a href="#appendix-A-12" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-B">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">TODO acknowledge.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-B">
+<section id="appendix-C">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
