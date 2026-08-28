@@ -1184,6 +1184,9 @@ vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
                 <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-smoothing-the-cubic-growth" class="internal xref">Smoothing the Cubic Growth</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.6">
+                <p id="section-toc.1-1.4.2.6.1"><a href="#section-4.6" class="auto internal xref">4.6</a>.  <a href="#name-calculation-overhead" class="internal xref">Calculation Overhead</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
@@ -1514,6 +1517,31 @@ distributed in time.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 <p id="section-4.5-2">Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, so
 a gap in acknowledgements accrues no growth to be caught up, and the increase is
 proportional to the ack stream by construction.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="overhead">
+<section id="section-4.6">
+        <h3 id="name-calculation-overhead">
+<a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-calculation-overhead" class="section-name selfRef">Calculation Overhead</a>
+        </h3>
+<p id="section-4.6-1">A_reno is arithmetic, but A_cubic requires a cube root. <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> evaluates one
+when the epoch begins, to obtain K, and thereafter only cubes; Cuback evaluates
+one whenever it computes D(w).<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-2">Storing the data still needed to increase the window by one segment, rather than
+recomputing D(w) on every acknowledgement, moves the evaluation from once per
+acknowledgement to once per increase. Each increase then evaluates three roots:
+K, A_cubic(w), and A_cubic(w + 1).<a href="#section-4.6-2" class="pilcrow">¶</a></p>
+<p id="section-4.6-3">Calculating a cube root to the accuracy required here is cheap. The
+approximation must be continuous in slope, adjacent evaluations being
+differenced, and one meeting that condition runs in about nine cycles on
+contemporary hardware, against roughly nine hundred to encrypt a 1460-byte
+segment through an AES-GCM-128 pipeline at 1.6 bytes per cycle. In the worst case, the window growing by one segment for every segment
+acknowledged, the overhead is therefore around three percent of the cost of
+encrypting the data that drove it; during congestion avoidance the window
+typically grows far more slowly than that.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.6-4">Furthermore, K is fixed for the duration of the epoch and could be retained
+rather than recomputed, and A(w + 1) for one increase is A(w) for the next and
+could be carried forward. Together these leave a single cube root per increase.<a href="#section-4.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
