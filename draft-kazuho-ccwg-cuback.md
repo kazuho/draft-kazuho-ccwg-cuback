@@ -194,11 +194,14 @@ bandwidth, and cwnd_epoch to the values they held before the event.
 
 ## Application-Limited Senders {#app-limited}
 
-A sender that can detect application-limited periods SHOULD refrain from
-increasing cwnd during them.
+The application-limited handling required by {{Section 4.2 of CUBIC}} has no
+counterpart in Cuback, there being no clock to pause and resume.
 
-Unlike in {{CUBIC}}, this is not mandatory, Cuback being ack-clocked. See
-{{app-limited-sensitivity}}.
+The rules of {{?I-D.ietf-ccwg-ratelimited-increase}}, which update {{CUBIC}},
+bound the increase of a rate-limited sender without any determination of its
+state. Even without them, growth is governed by acknowledged data rather than by
+elapsed time, and cwnd therefore stays closer to what the path has delivered
+than it does under {{CUBIC}}; see {{clock-timing}}.
 
 # Relationship to RFC 9438 {#relationship}
 
@@ -236,7 +239,7 @@ small rate and then achieves more than it recorded, so its clock runs fast. The
 congestion window advances fastest for the flow gaining share and slowest for
 the one giving it up.
 
-## Sensitivity to Application-Limited State {#app-limited-sensitivity}
+## Sensitivity to the Timing of Clock Transitions {#clock-timing}
 
 {{Section 4.2 of CUBIC}} requires that elapsed time exclude periods during which
 cwnd was not updated because the sender was application limited. A CUBIC sender
@@ -263,13 +266,15 @@ required to pause and resume its clock at the correct moments.
 
 Cuback has no clock to stop or start. When the sender stops, the advance of A(w)
 stops with it: no acknowledgements arrive, and nothing accrues to be caught up
-when transmission resumes. The case in which a misclassifying CUBIC sender is
-most exposed therefore does not arise.
+when transmission resumes. The case in which a mistimed CUBIC clock does the
+most damage therefore does not arise.
 
-A sender that keeps sending but holds less than cwnd in flight is mitigated
-rather than protected. Growth is governed by the amount of data acknowledged, as
-in Reno, so the window advances in proportion to what the flow placed in flight
-rather than in proportion to elapsed time.
+A sender that keeps sending but holds less than cwnd in flight is not protected
+altogether, only bounded. Growth is governed by the amount of data acknowledged,
+as in Reno, so cwnd advances in proportion to what the path delivered rather
+than in proportion to elapsed time. Applying
+{{I-D.ietf-ccwg-ratelimited-increase}} caps what remains, holding cwnd to what
+one window of the largest FlightSize observed would yield.
 
 ## The Reno-Friendly Estimate {#reno-estimate}
 
