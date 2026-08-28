@@ -1402,13 +1402,14 @@ bandwidth, and cwnd_epoch to the values they held before the event.<a href="#sec
         <h3 id="name-application-limited-senders">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-application-limited-senders" class="section-name selfRef">Application-Limited Senders</a>
         </h3>
-<p id="section-3.3-1">The application-limited handling required by <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> has no
-counterpart in Cuback, there being no clock to pause and resume.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">The application-limited clock handling required by <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> has
+no counterpart in Cuback, there being no clock to pause and resume.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">The rules of <span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span>, which update <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>,
 bound the increase of a rate-limited sender without any determination of its
 state. Even without them, growth is governed by acknowledged data rather than by
-elapsed time, and cwnd therefore stays closer to what the path has delivered
-than it does under <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>; see <a href="#clock-timing" class="auto internal xref">Section 4.3</a>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+elapsed time: an idle sender accrues no growth, while a sender that continues to
+deliver data below cwnd grows only in proportion to that delivered data; see
+<a href="#clock-timing" class="auto internal xref">Section 4.3</a>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
