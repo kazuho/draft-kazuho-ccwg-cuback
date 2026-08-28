@@ -26,9 +26,9 @@ informative:
 
 This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters.
-Congestion-window growth then uses the same ACK-driven mechanism as Reno. Test
-vectors are provided for validation.
+ACK-driven state with pure functions over immutable per-epoch parameters,
+removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
+mechanism as Reno. Test vectors are provided for validation.
 
 
 --- middle
@@ -73,10 +73,12 @@ difference lies only in how the required number of acknowledged bytes is
 calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.
 
-This property also makes the algorithm straightforward to test: the
-congestion-avoidance calculations can be validated directly from their inputs
-and outputs, without exercising a sequence of state-machine transitions. This
-document includes test vectors for that purpose.
+What remains of CUBIC's complexity is then confined to a pure function of the
+congestion window and the per-epoch parameters, which can be validated directly
+from its inputs and outputs without exercising a sequence of state-machine
+transitions. An implementation can therefore be checked against known values,
+and is correspondingly less prone to error. This document includes test vectors for
+that purpose.
 
 Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
 specified in {{CUBIC}} applies unchanged.
