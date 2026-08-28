@@ -200,44 +200,6 @@ Unlike in {{CUBIC}}, this is not mandatory, Cuback being ack-clocked. See
 
 # Relationship to RFC 9438 {#relationship}
 
-## Smoothing the Cubic Growth {#smoothing}
-
-{{Section 4.4 of CUBIC}} and {{Section 4.5 of CUBIC}} advance cwnd toward a
-target one round trip ahead, W_cubic(t + RTT), rather than assigning W_cubic(t) to cwnd directly.
-Because the CUBIC curve is driven by elapsed time, the growth owed at an
-acknowledgement depends on how long has passed since the previous one, and
-assigning the curve directly would turn a gap in acknowledgements into a step in
-cwnd, which is a burst. The one-round-trip target, together with the
-per-acknowledgement increase of (target - cwnd) / cwnd, spreads one round trip
-of the curve across one round trip of acknowledgements, making the increase
-proportional to the data acknowledged however the acknowledgements are
-distributed in time.
-
-Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, so
-a gap in acknowledgements accrues no growth to be caught up, and the increase is
-proportional to the ack stream by construction.
-
-## The Reno-Friendly Estimate {#reno-estimate}
-
-{{Section 4.3 of CUBIC}} advances W_est on each acknowledgement:
-
-~~~
-W_est = W_est + alpha_cubic * segments_acked / cwnd
-~~~
-
-where cwnd is the congestion window in effect. While the cubic curve governs, that window is larger than W_est, so the
-growth of W_est depends on the trajectory of the other curve. This coupling
-cannot be expressed as a function of W_est alone, and A_reno instead inverts the
-standalone recurrence, in which the divisor is the Reno-friendly window itself.
-
-Where A_reno is the smaller of the two curves, cwnd is the Reno-friendly window
-and the two formulations coincide exactly: both increase the window by one
-segment for every cwnd / alpha_cubic segments acknowledged. They differ only in
-where that region is entered. Because the standalone recurrence uses the smaller
-divisor, it advances faster while the cubic curve governs, and a Cuback sender
-enters the Reno-friendly region somewhat earlier than a sender following
-{{CUBIC}}.
-
 ## Sensitivity to the Bandwidth Estimate {#sensitivity}
 
 bandwidth scales A_cubic linearly, so an error in it is an error in the rate at
@@ -298,6 +260,44 @@ A sender that keeps sending but holds less than cwnd in flight is mitigated
 rather than protected. Growth is governed by the amount of data acknowledged, as
 in Reno, so the window advances in proportion to what the flow placed in flight
 rather than in proportion to elapsed time.
+
+## The Reno-Friendly Estimate {#reno-estimate}
+
+{{Section 4.3 of CUBIC}} advances W_est on each acknowledgement:
+
+~~~
+W_est = W_est + alpha_cubic * segments_acked / cwnd
+~~~
+
+where cwnd is the congestion window in effect. While the cubic curve governs, that window is larger than W_est, so the
+growth of W_est depends on the trajectory of the other curve. This coupling
+cannot be expressed as a function of W_est alone, and A_reno instead inverts the
+standalone recurrence, in which the divisor is the Reno-friendly window itself.
+
+Where A_reno is the smaller of the two curves, cwnd is the Reno-friendly window
+and the two formulations coincide exactly: both increase the window by one
+segment for every cwnd / alpha_cubic segments acknowledged. They differ only in
+where that region is entered. Because the standalone recurrence uses the smaller
+divisor, it advances faster while the cubic curve governs, and a Cuback sender
+enters the Reno-friendly region somewhat earlier than a sender following
+{{CUBIC}}.
+
+## Smoothing the Cubic Growth {#smoothing}
+
+{{Section 4.4 of CUBIC}} and {{Section 4.5 of CUBIC}} advance cwnd toward a
+target one round trip ahead, W_cubic(t + RTT), rather than assigning W_cubic(t) to cwnd directly.
+Because the CUBIC curve is driven by elapsed time, the growth owed at an
+acknowledgement depends on how long has passed since the previous one, and
+assigning the curve directly would turn a gap in acknowledgements into a step in
+cwnd, which is a burst. The one-round-trip target, together with the
+per-acknowledgement increase of (target - cwnd) / cwnd, spreads one round trip
+of the curve across one round trip of acknowledgements, making the increase
+proportional to the data acknowledged however the acknowledgements are
+distributed in time.
+
+Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, so
+a gap in acknowledgements accrues no growth to be caught up, and the increase is
+proportional to the ack stream by construction.
 
 # Security Considerations {#security}
 
