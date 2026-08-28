@@ -256,9 +256,11 @@ from every acknowledgement that advances the largest acknowledged packet number
 {{?RFC9002}}, so the smoothed round-trip time can be assumed to follow the queue
 closely by the time the estimate matters.
 
-Deriving the clock from acknowledgements also reinforces the convergence that
-AIMD provides, because bandwidth records the rate the flow was achieving before
-it reduced. A flow holding a large share gives up the most at a congestion
+## Convergence under the ACK Clock {#convergence}
+
+Deriving the clock from acknowledgements reinforces the convergence that AIMD
+provides, because bandwidth records the rate the flow was achieving before it
+reduced. A flow holding a large share gives up the most at a congestion
 event, so the rate it goes on to achieve falls below the value it recorded and
 its clock runs slow. A flow arriving with a small share records a correspondingly
 small rate and then achieves more than it recorded, so its clock runs fast. The
