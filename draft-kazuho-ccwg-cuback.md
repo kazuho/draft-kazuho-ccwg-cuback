@@ -196,27 +196,26 @@ A sender that can detect application-limited periods SHOULD refrain from
 increasing cwnd during them.
 
 Unlike in {{CUBIC}}, this is not mandatory, Cuback being ack-clocked. See
-{{app-limited-growth}}.
+{{app-limited-sensitivity}}.
 
 # Relationship to RFC 9438 {#relationship}
 
-## Preserved Behavior {#preserved}
+## Smoothing the Cubic Growth {#smoothing}
 
-W_max, cwnd_prior, cwnd_epoch, K, alpha_cubic, beta_cubic, and C are those of
-{{CUBIC}} and are established by the mechanisms of that document. Relative to
-Section 4.1.2 of that document, Cuback adds bandwidth and removes t_current,
-t_epoch, W_cubic(t), target, and W_est; apart from W_max and bandwidth, a Cuback
-sender retains only pending, exactly as a Reno sender does. A_cubic is the
-inverse of W_cubic(t), so the cubic trajectory is unchanged. The limit of
-one half of the congestion window per round trip is preserved as the lower bound
-on D(w). Where A_reno is the smaller of the two curves, D(w) is
-cwnd / alpha_cubic, the Reno-friendly increase of {{Section 4.3 of CUBIC}}.
+{{Section 4.4 of CUBIC}} and {{Section 4.5 of CUBIC}} advance cwnd toward a
+target one round trip ahead, W_cubic(t + RTT), rather than assigning W_cubic(t) to cwnd directly.
+Because the CUBIC curve is driven by elapsed time, the growth owed at an
+acknowledgement depends on how long has passed since the previous one, and
+assigning the curve directly would turn a gap in acknowledgements into a step in
+cwnd, which is a burst. The one-round-trip target, together with the
+per-acknowledgement increase of (target - cwnd) / cwnd, spreads one round trip
+of the curve across one round trip of acknowledgements, making the increase
+proportional to the data acknowledged however the acknowledgements are
+distributed in time.
 
-{{Section 4.4 of CUBIC}} and {{Section 4.5 of CUBIC}} approximate W_cubic(t) by
-advancing cwnd
-toward the target W_cubic(t + RTT). That look-ahead exists because a per-
-acknowledgement additive rule can only approach the curve; A_cubic inverts it
-exactly, and no look-ahead is required.
+Cuback needs no such smoothing. D(w) is a function of acknowledged data alone, so
+a gap in acknowledgements accrues no growth to be caught up, and the increase is
+proportional to the ack stream by construction.
 
 ## The Reno-Friendly Estimate {#reno-estimate}
 
@@ -241,61 +240,62 @@ enters the Reno-friendly region somewhat earlier than a sender following
 
 ## Sensitivity to the Bandwidth Estimate {#sensitivity}
 
-bandwidth scales A_cubic linearly, and so an error in it is an error in the rate
-at which the cubic curve is traversed. Underestimating the delivery rate
-traverses the curve more quickly than elapsed time would, and overestimating it
-more slowly. A sender following {{CUBIC}} reads a clock and is not subject to
-this error. This is the cost of the reformulation.
+bandwidth scales A_cubic linearly, so an error in it is an error in the rate at
+which the cubic curve is traversed: an underestimate traverses the curve more
+quickly than elapsed time would, and an overestimate more slowly. Cuback is
+therefore sensitive to the smoothed round-trip time from which bandwidth is
+derived, which has to describe the path as it was while cwnd was at its peak,
+with the bottleneck queue at its deepest. A round-trip time carried over from a period
+when the queue was shallower is too short and overstates bandwidth, leading to
+growth more conservative than the cubic curve prescribes.
 
-The estimate is derived from the sender's own congestion window and smoothed
-round-trip time, so a receiver cannot influence it other than by inflating the
-measured round-trip time, which lowers bandwidth and accelerates the traversal.
-That effect is partly self-cancelling, as the round trip over which the
-acknowledgements arrive lengthens correspondingly.
+The sensitivity is confined to windows large enough for the cubic curve to
+govern, A_reno carrying no bandwidth term. Windows that large deliver many
+acknowledgements per round trip, and a QUIC sender takes a round-trip sample
+from every acknowledgement that advances the largest acknowledged packet number
+{{?RFC9002}}, so the smoothed round-trip time can be assumed to follow the queue
+closely by the time the estimate matters.
 
-## Growth While Application Limited {#app-limited-growth}
+Deriving the clock from acknowledgements also reinforces the convergence that
+AIMD provides, because bandwidth records the rate the flow was achieving before
+it reduced. A flow holding a large share gives up the most at a congestion
+event, so the rate it goes on to achieve falls below the value it recorded and
+its clock runs slow. A flow arriving with a small share records a correspondingly
+small rate and then achieves more than it recorded, so its clock runs fast. The
+congestion window advances fastest for the flow gaining share and slowest for
+the one giving it up.
 
-{{Section 5.8 of CUBIC}} requires that the cubic curve not advance while the
-sender is application limited, which entails suspending and resuming the stage.
-In Cuback, A(w) advances only as data is acknowledged, so a sender that is not
-filling its congestion window advances proportionally more slowly with no
-additional mechanism.
+## Sensitivity to Application-Limited State {#app-limited-sensitivity}
 
-This is not equivalent to suspending growth. An application-limited Cuback
-sender continues to advance, at a rate bounded by the data it does have in
-flight. The recommendation of {{app-limited}} therefore stands: Cuback bounds
-the
-consequence of imprecise detection rather than removing it.
+{{Section 4.2 of CUBIC}} requires that elapsed time exclude periods during which
+cwnd was not updated because the sender was application limited. A CUBIC sender
+therefore has to classify each moment as one state or the other, and the
+classification can be wrong in either direction.
 
-The same distinction bears on the quantity from which the epoch is derived.
-{{Section 4.6 of CUBIC}} sets ssthresh from flight_size while W_max comes from
-cwnd (Section 4.1.2), because cwnd may have grown while the sender was not
-filling it; {{Section 3.1 of RENO}} makes the same choice, warning that
-cwnd "may incidentally increase well beyond rwnd". That growth is a property of
-the clock. A CUBIC sender advances W_cubic(t) with elapsed time, so an epoch
-that is not correctly suspended inflates cwnd while nothing is being delivered.
-Cuback advances only as data is acknowledged, so the divergence between cwnd and
-flight_size is bounded by the data the sender did place in flight. Cuback is
-therefore in the position of Reno rather than of CUBIC, and the choice between
-the two quantities is the one already made differently by {{RENO}}, which
-uses flight_size, and by {{?RFC9002}}, which reduces cwnd directly.
+Treating an application-limited sender as congestion-window limited leaves the
+clock running. W_cubic(t) advances while the flow is not filling cwnd, and cwnd
+grows on evidence the path never supplied; {{Section 5.8 of CUBIC}} names the
+consequence, that W_cubic(t) "might be very high after restarting from these
+periods". Treating a congestion-window-limited sender as application limited
+stops the clock instead, abandoning the epoch and re-anchoring it when sending
+resumes, so the flow forfeits its progress along the curve and grows too slowly.
 
-This document does not choose between them; it requires only that W_max,
-cwnd_epoch, and bandwidth be derived from the same one ({{ca}}). The cost of
-mixing them falls on the early part of the epoch. A W_max taken from a window
-the flow was not filling places the plateau above the one it sustained, and
-because the cubic curve rises most steeply farthest from its inflection point,
-the steps that become cheapest are those just after the congestion event -- when
-the flows it competes with are themselves recovering. Deriving bandwidth from
-that same window scales A_cubic and partly offsets the effect, which is why the
-requirement here is consistency rather than a particular choice.
+Neither state is directly observable: a sender that has filled its output batch
+is sending, but that does not establish that it filled its congestion window,
+and a paced sender waiting for its next send opportunity has filled the window
+but is not sending at that instant. Tracking the state precisely enough for
+CUBIC has needed a specification of its own, now written down in
+{{?I-D.ietf-ccwg-ratelimited-increase}}, which updates {{CUBIC}}.
 
-## Reverting an Epoch {#reverting}
+Cuback has no clock to stop or start. When the sender stops, the advance of A(w)
+stops with it: no acknowledgements arrive, and nothing accrues to be caught up
+when transmission resumes. The case in which a misclassifying CUBIC sender is
+most exposed therefore does not arise.
 
-Restoring the parameters ({{spurious}}) is all that reverting a congestion event
-requires, because they are the sole inputs to A(w) besides the congestion window
-itself. No trajectory has to be reconstructed.
-
+A sender that keeps sending but holds less than cwnd in flight is mitigated
+rather than protected. Growth is governed by the amount of data acknowledged, as
+in Reno, so the window advances in proportion to what the flow placed in flight
+rather than in proportion to elapsed time.
 
 # Security Considerations {#security}
 
