@@ -138,7 +138,7 @@ Table of Contents
    document.
 
    What remains of CUBIC's complexity is then confined to a pure
-   function of the congestion window and the per-epoch parameters, which
+   function of the congestion window and the per-epoch immutables, which
    can be validated directly from its inputs and outputs without
    exercising a sequence of state-machine transitions.  An
    implementation can therefore be checked against known values, and is
