@@ -74,7 +74,7 @@ calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.
 
 What remains of CUBIC's complexity is then confined to a pure function of the
-congestion window and the per-epoch parameters, which can be validated directly
+congestion window and the per-epoch immutables, which can be validated directly
 from its inputs and outputs without exercising a sequence of state-machine
 transitions. An implementation can therefore be checked against known values,
 and is correspondingly less prone to error. This document includes test vectors for
