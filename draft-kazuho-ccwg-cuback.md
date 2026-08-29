@@ -78,8 +78,8 @@ Cuback obtains it by evaluating the pure functions defined in this document.
 When a new flow joins a high-capacity path already carrying an established flow,
 it also acquires its share more rapidly than it would under CUBIC. Cuback derives its growth rate from the
 congestion window and round-trip time recorded at the previous congestion event.
-Because additive increase gives a small window a larger proportional increase
-than a large one, a newcomer gains share; its ACK rate, and hence its ACK
+Because the cubic function gives a flow with a smaller window a larger
+proportional increase, a newcomer gains share; its ACK rate, and hence its ACK
 clock, runs faster than originally anticipated. This gain compounds over
 successive round trips, and reduces the time to completion of short flows, such
 as the delivery of HTTP objects. The advantage diminishes as the flow's rate
