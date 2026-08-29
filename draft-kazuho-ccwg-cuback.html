@@ -9,9 +9,11 @@
 <meta content="
        This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters,
-removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
-mechanism as Reno. Test vectors are provided for validation. 
+ACK-driven state with pure functions over immutable per-epoch parameters.
+Congestion-window growth then uses the same ACK-driven mechanism as Reno,
+removing several sources of implementation error. The reformulation also lets a flow acquire its
+share of a bottleneck more quickly on joining, which benefits short flows.
+Test vectors are provided for validation. 
     " name="description">
 <meta content="xml2rfc 3.34.0" name="generator">
 <meta content="internet-draft" name="keyword">
@@ -25,7 +27,7 @@ mechanism as Reno. Test vectors are provided for validation.
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.3
+    platformdirs 4.11.5
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1049,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Oku</td>
-<td class="center">Expires 1 March 2027</td>
+<td class="center">Expires 2 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-kazuho-ccwg-cuback-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-28" class="published">28 August 2026</time>
+<time datetime="2026-08-29" class="published">29 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-01">1 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-02">2 March 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1083,9 +1085,11 @@ svg {
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters,
-removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
-mechanism as Reno. Test vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+ACK-driven state with pure functions over immutable per-epoch parameters.
+Congestion-window growth then uses the same ACK-driven mechanism as Reno,
+removing several sources of implementation error. The reformulation also lets a flow acquire its
+share of a bottleneck more quickly on joining, which benefits short flows.
+Test vectors are provided for validation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1117,7 +1121,7 @@ mechanism as Reno. Test vectors are provided for validation.<a href="#section-ab
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1263,14 +1267,23 @@ enough have been received to increase the congestion window by one MSS. The
 difference lies only in how the required number of acknowledged bytes is
 calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">What remains of CUBIC's complexity is then confined to a pure function of the
+<p id="section-1-6">When a new flow joins a high-capacity path already carrying an established flow,
+it also acquires its share more rapidly than it would under CUBIC. Cuback derives its growth rate from the
+congestion window and round-trip time recorded at the previous congestion event.
+Because AIMD reduces the larger window by more, an established flow gives up
+more capacity than a newcomer at a shared congestion event; the newcomer then
+achieves more than it recorded, and its ACK clock runs faster than elapsed
+time. This reduces the time to completion of short flows, such as
+the delivery of HTTP objects. The advantage diminishes as the flow's rate
+converges on the value it recorded.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">What remains of CUBIC's complexity is confined to a pure function of the
 congestion window and the per-epoch immutables, which can be validated directly
 from its inputs and outputs without exercising a sequence of state-machine
 transitions. An implementation can therefore be checked against known values,
 and is correspondingly less prone to error. This document includes test vectors for
-that purpose.<a href="#section-1-6" class="pilcrow">¶</a></p>
-<p id="section-1-7">Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
-specified in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> applies unchanged.<a href="#section-1-7" class="pilcrow">¶</a></p>
+that purpose.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
+specified in <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> applies unchanged.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1457,6 +1470,11 @@ its clock runs slow. A flow arriving with a small share records a correspondingl
 small rate and then achieves more than it recorded, so its clock runs fast. The
 congestion window advances fastest for the flow gaining share and slowest for
 the one giving it up.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The curve advances at the ratio of the rate the flow is currently achieving to
+the rate recorded at the last congestion event. A flow that has since doubled
+its share traverses the curve twice as fast as elapsed time would carry it; one
+that has halved its share, half as fast. The advantage therefore decays as the
+achieved rate converges on the recorded one.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="clock-timing">

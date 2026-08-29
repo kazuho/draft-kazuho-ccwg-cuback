@@ -4,8 +4,8 @@
 
 Congestion Control Working Group                        奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
-Intended status: Experimental                             28 August 2026
-Expires: 1 March 2027
+Intended status: Experimental                             29 August 2026
+Expires: 2 March 2027
 
 
                  CUBACK: CUBIC Driven by the ACK Clock
@@ -16,10 +16,11 @@ Abstract
    This document specifies Cuback, an ACK-driven reformulation of CUBIC
    congestion control that simplifies implementation by replacing
    CUBIC's mutable time- and ACK-driven state with pure functions over
-   immutable per-epoch parameters, removing several sources of
-   implementation error.  Congestion-window growth then uses the same
-   ACK-driven mechanism as Reno.  Test vectors are provided for
-   validation.
+   immutable per-epoch parameters.  Congestion-window growth then uses
+   the same ACK-driven mechanism as Reno, removing several sources of
+   implementation error.  The reformulation also lets a flow acquire its
+   share of a bottleneck more quickly on joining, which benefits short
+   flows.  Test vectors are provided for validation.
 
 Discussion Venues
 
@@ -47,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 March 2027.
+   This Internet-Draft will expire on 2 March 2027.
 
 Copyright Notice
 
@@ -137,13 +138,25 @@ Table of Contents
    Cuback obtains it by evaluating the pure functions defined in this
    document.
 
-   What remains of CUBIC's complexity is then confined to a pure
-   function of the congestion window and the per-epoch immutables, which
-   can be validated directly from its inputs and outputs without
-   exercising a sequence of state-machine transitions.  An
-   implementation can therefore be checked against known values, and is
-   correspondingly less prone to error.  This document includes test
-   vectors for that purpose.
+   When a new flow joins a high-capacity path already carrying an
+   established flow, it also acquires its share more rapidly than it
+   would under CUBIC.  Cuback derives its growth rate from the
+   congestion window and round-trip time recorded at the previous
+   congestion event.  Because AIMD reduces the larger window by more, an
+   established flow gives up more capacity than a newcomer at a shared
+   congestion event; the newcomer then achieves more than it recorded,
+   and its ACK clock runs faster than elapsed time.  This reduces the
+   time to completion of short flows, such as the delivery of HTTP
+   objects.  The advantage diminishes as the flow's rate converges on
+   the value it recorded.
+
+   What remains of CUBIC's complexity is confined to a pure function of
+   the congestion window and the per-epoch immutables, which can be
+   validated directly from its inputs and outputs without exercising a
+   sequence of state-machine transitions.  An implementation can
+   therefore be checked against known values, and is correspondingly
+   less prone to error.  This document includes test vectors for that
+   purpose.
 
    Cuback alters only the congestion avoidance stage of CUBIC.  All
    other behavior specified in [CUBIC] applies unchanged.
@@ -307,6 +320,13 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
    then achieves more than it recorded, so its clock runs fast.  The
    congestion window advances fastest for the flow gaining share and
    slowest for the one giving it up.
+
+   The curve advances at the ratio of the rate the flow is currently
+   achieving to the rate recorded at the last congestion event.  A flow
+   that has since doubled its share traverses the curve twice as fast as
+   elapsed time would carry it; one that has halved its share, half as
+   fast.  The advantage therefore decays as the achieved rate converges
+   on the recorded one.
 
 4.3.  Sensitivity to the Timing of Clock Transitions
 
