@@ -26,9 +26,11 @@ informative:
 
 This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters,
-removing several sources of implementation error. Congestion-window growth then uses the same ACK-driven
-mechanism as Reno. Test vectors are provided for validation.
+ACK-driven state with pure functions over immutable per-epoch parameters.
+Congestion-window growth then uses the same ACK-driven mechanism as Reno,
+removing several sources of implementation error. The reformulation also lets a flow acquire its
+share of a bottleneck more quickly on joining, which benefits short flows.
+Test vectors are provided for validation.
 
 
 --- middle
@@ -73,7 +75,17 @@ difference lies only in how the required number of acknowledged bytes is
 calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.
 
-What remains of CUBIC's complexity is then confined to a pure function of the
+When a new flow joins a high-capacity path already carrying an established flow,
+it also acquires its share more rapidly than it would under CUBIC. Cuback derives its growth rate from the
+congestion window and round-trip time recorded at the previous congestion event.
+Because AIMD reduces the larger window by more, an established flow gives up
+more capacity than a newcomer at a shared congestion event; the newcomer then
+achieves more than it recorded, and its ACK clock runs faster than elapsed
+time. This reduces the time to completion of short flows, such as
+the delivery of HTTP objects. The advantage diminishes as the flow's rate
+converges on the value it recorded.
+
+What remains of CUBIC's complexity is confined to a pure function of the
 congestion window and the per-epoch immutables, which can be validated directly
 from its inputs and outputs without exercising a sequence of state-machine
 transitions. An implementation can therefore be checked against known values,
@@ -239,6 +251,12 @@ its clock runs slow. A flow arriving with a small share records a correspondingl
 small rate and then achieves more than it recorded, so its clock runs fast. The
 congestion window advances fastest for the flow gaining share and slowest for
 the one giving it up.
+
+The curve advances at the ratio of the rate the flow is currently achieving to
+the rate recorded at the last congestion event. A flow that has since doubled
+its share traverses the curve twice as fast as elapsed time would carry it; one
+that has halved its share, half as fast. The advantage therefore decays as the
+achieved rate converges on the recorded one.
 
 ## Sensitivity to the Timing of Clock Transitions {#clock-timing}
 
