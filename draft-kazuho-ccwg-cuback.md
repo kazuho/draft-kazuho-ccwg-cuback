@@ -28,8 +28,8 @@ This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
 control that simplifies implementation by replacing CUBIC's mutable time- and
 ACK-driven state with pure functions over immutable per-epoch parameters.
 Congestion-window growth then uses the same ACK-driven mechanism as Reno,
-removing several sources of implementation error. The reformulation also lets a flow acquire its
-share of a bottleneck more quickly on joining, which benefits short flows.
+removing several sources of implementation error. The reformulation can also let a flow acquire
+its share of a bottleneck more quickly on joining, which benefits short flows.
 Test vectors are provided for validation.
 
 
@@ -78,11 +78,11 @@ Cuback obtains it by evaluating the pure functions defined in this document.
 When a new flow joins a high-capacity path already carrying an established flow,
 it also acquires its share more rapidly than it would under CUBIC. Cuback derives its growth rate from the
 congestion window and round-trip time recorded at the previous congestion event.
-Because AIMD reduces the larger window by more, an established flow gives up
-more capacity than a newcomer at a shared congestion event; the newcomer then
-achieves more than it recorded, and its ACK clock runs faster than elapsed
-time. This reduces the time to completion of short flows, such as
-the delivery of HTTP objects. The advantage diminishes as the flow's rate
+Because additive increase gives a small window a larger proportional increase
+than a large one, a newcomer gains share; its ACK rate, and hence its ACK
+clock, runs faster than originally anticipated. This gain compounds over
+successive round trips, and reduces the time to completion of short flows, such
+as the delivery of HTTP objects. The advantage diminishes as the flow's rate
 converges on the value it recorded.
 
 What remains of CUBIC's complexity is confined to a pure function of the
