@@ -1,7 +1,7 @@
 ---
 title: "CUBACK: CUBIC Driven by the ACK Clock"
 abbrev: "cuback"
-category: exp
+category: std
 docname: draft-kazuho-ccwg-cuback-latest
 workgroup: "Congestion Control Working Group"
 ipr: trust200902
