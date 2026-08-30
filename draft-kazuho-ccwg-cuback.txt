@@ -4,7 +4,7 @@
 
 Congestion Control Working Group                        奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
-Intended status: Experimental                             30 August 2026
+Intended status: Standards Track                          30 August 2026
 Expires: 3 March 2027
 
 
