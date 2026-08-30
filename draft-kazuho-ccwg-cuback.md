@@ -25,12 +25,12 @@ informative:
 --- abstract
 
 This document specifies Cuback, an ACK-driven reformulation of CUBIC congestion
-control that simplifies implementation by replacing CUBIC's mutable time- and
-ACK-driven state with pure functions over immutable per-epoch parameters.
-Congestion-window growth then uses the same ACK-driven mechanism as Reno,
-removing several sources of implementation error. The reformulation can also let a flow acquire
-its share of a bottleneck more quickly on joining, which benefits short flows.
-Test vectors are provided for validation.
+control. It simplifies implementation by replacing CUBIC's mutable time- and
+ACK-driven state with pure functions over immutable per-epoch parameters, for
+which test vectors are provided. Congestion-window growth uses the same
+ACK-driven mechanism as Reno, removing several sources of implementation error.
+The reformulation can also let a flow acquire its share of a bottleneck more
+quickly on joining, which benefits short flows.
 
 
 --- middle
