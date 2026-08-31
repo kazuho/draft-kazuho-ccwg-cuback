@@ -75,8 +75,16 @@ difference lies only in how the required number of acknowledged bytes is
 calculated: Reno derives it directly from the current congestion window, whereas
 Cuback obtains it by evaluating the pure functions defined in this document.
 
-When a new flow joins a high-capacity path already carrying an established flow,
-it also acquires its share more rapidly than it would under CUBIC. Cuback derives its growth rate from the
+What remains of CUBIC's complexity is confined to a pure function of the
+congestion window and the per-epoch immutables, which can be validated directly
+from its inputs and outputs without exercising a sequence of state-machine
+transitions. An implementation can therefore be checked against known values,
+and is correspondingly less prone to error. This document includes test vectors for
+that purpose.
+
+The use of the ACK clock has a performance benefit as well. When a new flow joins a
+high-capacity path already carrying an established flow, it acquires its share
+more rapidly than it would under CUBIC. Cuback derives its growth rate from the
 congestion window and round-trip time recorded at the previous congestion event.
 Because the cubic function gives a flow with a smaller window a larger
 proportional increase, a newcomer gains share; its ACK rate, and hence its ACK
@@ -84,13 +92,6 @@ clock, runs faster than originally anticipated. This gain compounds over
 successive round trips, and reduces the time to completion of short flows, such
 as the delivery of HTTP objects. The advantage diminishes as the flow's rate
 converges on the value it recorded.
-
-What remains of CUBIC's complexity is confined to a pure function of the
-congestion window and the per-epoch immutables, which can be validated directly
-from its inputs and outputs without exercising a sequence of state-machine
-transitions. An implementation can therefore be checked against known values,
-and is correspondingly less prone to error. This document includes test vectors for
-that purpose.
 
 Cuback alters only the congestion avoidance stage of CUBIC. All other behavior
 specified in {{CUBIC}} applies unchanged.
