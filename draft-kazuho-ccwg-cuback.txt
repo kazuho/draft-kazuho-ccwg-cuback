@@ -19,8 +19,8 @@ Abstract
    immutable per-epoch parameters, for which test vectors are provided.
    Congestion-window growth uses the same ACK-driven mechanism as Reno,
    removing several sources of implementation error.  The reformulation
-   can also let a flow acquire its share of a bottleneck more quickly on
-   joining, which benefits short flows.
+   can also let a new flow acquire its share of a bottleneck more
+   quickly, so short flows complete earlier.
 
 Discussion Venues
 
