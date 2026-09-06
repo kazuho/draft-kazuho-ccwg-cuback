@@ -6,7 +6,7 @@ docname: draft-kazuho-ccwg-cuback-latest
 workgroup: "Congestion Control Working Group"
 ipr: trust200902
 keyword: internet-draft
-pi: [roc, sortrefs, symrefs]
+pi: [toc, sortrefs, symrefs]
 stand_alone: yes
 author:
  -
