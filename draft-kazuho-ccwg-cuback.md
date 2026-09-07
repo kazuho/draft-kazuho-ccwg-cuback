@@ -29,8 +29,8 @@ control. It simplifies implementation by replacing CUBIC's mutable time- and
 ACK-driven state with pure functions over immutable per-epoch parameters, for
 which test vectors are provided. Congestion-window growth uses the same
 ACK-driven mechanism as Reno, removing several sources of implementation error.
-The reformulation can also let a new flow acquire its share of a bottleneck
-more quickly, so short flows complete earlier.
+When entering a high-capacity path, a newcomer converges on its share sooner
+than under CUBIC, so short flows complete earlier.
 
 
 --- middle
