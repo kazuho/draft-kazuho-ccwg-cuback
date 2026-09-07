@@ -4,8 +4,8 @@
 
 Congestion Control Working Group                        奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
-Intended status: Standards Track                        6 September 2026
-Expires: 10 March 2027
+Intended status: Standards Track                        7 September 2026
+Expires: 11 March 2027
 
 
                  CUBACK: CUBIC Driven by the ACK Clock
@@ -18,9 +18,9 @@ Abstract
    CUBIC's mutable time- and ACK-driven state with pure functions over
    immutable per-epoch parameters, for which test vectors are provided.
    Congestion-window growth uses the same ACK-driven mechanism as Reno,
-   removing several sources of implementation error.  The reformulation
-   can also let a new flow acquire its share of a bottleneck more
-   quickly, so short flows complete earlier.
+   removing several sources of implementation error.  When entering a
+   high-capacity path, a newcomer's ACK clock runs faster than the
+   incumbents', so short flows complete earlier than under CUBIC.
 
 Discussion Venues
 
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 March 2027.
+   This Internet-Draft will expire on 11 March 2027.
 
 Copyright Notice
 
@@ -473,9 +473,9 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
               Welzl, M., Henderson, T., Fairhurst, G., and M. P.
               Tahiliani, "Increase of the Congestion Window when the
               Sender Is Rate-Limited", Work in Progress, Internet-Draft,
-              draft-ietf-ccwg-ratelimited-increase-10, 21 August 2026,
+              draft-ietf-ccwg-ratelimited-increase-11, 6 September 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-
-              ratelimited-increase-10>.
+              ratelimited-increase-11>.
 
    [RENO]     Allman, M., Paxson, V., and E. Blanton, "TCP Congestion
               Control", RFC 5681, DOI 10.17487/RFC5681, September 2009,
