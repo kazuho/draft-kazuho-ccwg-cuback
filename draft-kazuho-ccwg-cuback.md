@@ -234,8 +234,8 @@ other and on the time at which each acknowledgement arrives, making limit()
 complex to derive. Under Cuback, it is determined by A(w) alone.
 
 Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
-only when A(w + 1) - A(maxFS) does not exceed maxFS. The lower bound on D(w)
-further limits cwnd to 1.5 * maxFS. Separately, as in the limit that
+approximately when A(w + 1) - A(maxFS) does not exceed maxFS, with the lower
+bound on D(w) further limiting cwnd to 1.5 * maxFS. Separately, as in the limit that
 {{RATE-LIMITED}} gives for Reno, cwnd is allowed to reach
 maxFS + 1, so that a sender limited by cwnd continues to grow even where a
 one-segment increase takes more than one window of acknowledgements.
