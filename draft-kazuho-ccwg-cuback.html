@@ -1425,10 +1425,10 @@ bandwidth, and cwnd_epoch to the values they held before the event.<a href="#sec
 <span><a href="https://rfc-editor.org/rfc/rfc9438#section-5.8" class="relref">Section 5.8</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> restricts the increase of cwnd, and
 <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> requires that the elapsed time used by the cubic curve
 exclude application-limited periods.
-<span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> replaces the former and leaves the
+<span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> replaces the former and leaves the
 latter unchanged.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">The former applies to Cuback as it does to <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>. Stacks might meet it by
-applying <span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> as described in <a href="#rli" class="auto internal xref">Section 3.3.1</a>. Other
+applying <span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> as described in <a href="#rli" class="auto internal xref">Section 3.3.1</a>. Other
 means are also possible, such as suspending the increase while bytes in flight
 are below cwnd, as in <span><a href="https://rfc-editor.org/rfc/rfc9002#section-7.8" class="relref">Section 7.8</a> of [<a href="#RFC9002" class="cite xref">RFC9002</a>]</span>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">The latter has no counterpart in Cuback, there being no clock to pause and
@@ -1441,7 +1441,7 @@ below cwnd grows only in proportion to that delivered data; see
           <h4 id="name-applying-rate-limited-incre">
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-applying-rate-limited-incre" class="section-name selfRef">Applying Rate-Limited Increase</a>
           </h4>
-<p id="section-3.3.1-1"><span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> caps cwnd at limit(maxFS), the largest
+<p id="section-3.3.1-1"><span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> caps cwnd at limit(maxFS), the largest
 congestion window that the congestion controller would yield from the
 acknowledgements produced by one window of maxFS, the largest FlightSize
 observed since cwnd was last reduced. Each congestion controller defines its own
@@ -1451,7 +1451,7 @@ separately from cwnd, so limit() can only be approximated. Under Cuback, it is d
 <p id="section-3.3.1-2">Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
 only when A(w + 1) - A(maxFS) does not exceed maxFS. The lower bound on D(w)
 further limits cwnd to 1.5 * maxFS. Separately, as in the limit that
-<span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> gives for Reno, cwnd is allowed to reach
+<span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> gives for Reno, cwnd is allowed to reach
 maxFS + 1, so that a sender limited by cwnd continues to grow even where a
 one-segment increase takes more than one window of acknowledgements.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-3">An increase of cwnd from w to w + 1 is therefore permitted when:<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
@@ -1540,7 +1540,7 @@ is never accrued and the flow grows too slowly.<a href="#section-4.3-2" class="p
 can in one pass and so appear limited by the congestion controller, even though
 its bytes in flight are below cwnd. Conversely, an in-stack pacer might withhold
 emission after a train of acknowledgements, leaving bytes in flight below cwnd
-although the connection is still limited by the congestion window. <span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> updates
+although the connection is still limited by the congestion window. <span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> updates
 <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, mitigating the impact of such overgrowth by capping cwnd at a value
 derived from the largest FlightSize observed, but a CUBIC sender is still
 required to pause and resume its clock at the correct moments.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
@@ -1552,7 +1552,7 @@ most damage therefore does not arise.<a href="#section-4.3-4" class="pilcrow">¶
 altogether, only bounded. Growth is governed by the amount of data acknowledged,
 as in Reno, so cwnd advances in proportion to what the path delivered rather
 than in proportion to elapsed time. Applying
-<span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> caps what remains, holding cwnd to what
+<span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> caps what remains, holding cwnd to what
 one window of the largest FlightSize observed would yield.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1676,7 +1676,7 @@ could be carried forward. Together these leave a single cube root per increase.<
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="I-D.ietf-ccwg-ratelimited-increase">[I-D.ietf-ccwg-ratelimited-increase]</dt>
+<dt id="RATE-LIMITED">[RATE-LIMITED]</dt>
         <dd>
 <span class="refAuthor">Welzl, M.</span>, <span class="refAuthor">Henderson, T.</span>, <span class="refAuthor">Fairhurst, G.</span>, and <span class="refAuthor">M. P. Tahiliani</span>, <span class="refTitle">"Increase of the Congestion Window when the Sender Is Rate-Limited"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ccwg-ratelimited-increase-11</span>, <time datetime="2026-09-06" class="refDate">6 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-11">https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>

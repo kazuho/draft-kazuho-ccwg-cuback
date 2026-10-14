@@ -276,15 +276,13 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
    [CUBIC] places two separate requirements on an application-limited
    sender.  Section 5.8 of [CUBIC] restricts the increase of cwnd, and
    Section 4.2 of [CUBIC] requires that the elapsed time used by the
-   cubic curve exclude application-limited periods.
-   [I-D.ietf-ccwg-ratelimited-increase] replaces the former and leaves
-   the latter unchanged.
+   cubic curve exclude application-limited periods.  [RATE-LIMITED]
+   replaces the former and leaves the latter unchanged.
 
    The former applies to Cuback as it does to [CUBIC].  Stacks might
-   meet it by applying [I-D.ietf-ccwg-ratelimited-increase] as described
-   in Section 3.3.1.  Other means are also possible, such as suspending
-   the increase while bytes in flight are below cwnd, as in Section 7.8
-   of [RFC9002].
+   meet it by applying [RATE-LIMITED] as described in Section 3.3.1.
+   Other means are also possible, such as suspending the increase while
+   bytes in flight are below cwnd, as in Section 7.8 of [RFC9002].
 
    The latter has no counterpart in Cuback, there being no clock to
    pause and resume.  Growth is governed by acknowledged data rather
@@ -294,23 +292,23 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
 
 3.3.1.  Applying Rate-Limited Increase
 
-   [I-D.ietf-ccwg-ratelimited-increase] caps cwnd at limit(maxFS), the
-   largest congestion window that the congestion controller would yield
-   from the acknowledgements produced by one window of maxFS, the
-   largest FlightSize observed since cwnd was last reduced.  Each
-   congestion controller defines its own limit().  Under [CUBIC], the
-   growth produced by a window of acknowledgements depends on the time
-   over which they arrive and on W_est, which evolves separately from
-   cwnd, so limit() can only be approximated.  Under Cuback, it is
-   determined by A(w) alone.
+   [RATE-LIMITED] caps cwnd at limit(maxFS), the largest congestion
+   window that the congestion controller would yield from the
+   acknowledgements produced by one window of maxFS, the largest
+   FlightSize observed since cwnd was last reduced.  Each congestion
+   controller defines its own limit().  Under [CUBIC], the growth
+   produced by a window of acknowledgements depends on the time over
+   which they arrive and on W_est, which evolves separately from cwnd,
+   so limit() can only be approximated.  Under Cuback, it is determined
+   by A(w) alone.
 
    Within one window of acknowledgements, cwnd can be raised from maxFS
    to w + 1 only when A(w + 1) - A(maxFS) does not exceed maxFS.  The
    lower bound on D(w) further limits cwnd to 1.5 * maxFS.  Separately,
-   as in the limit that [I-D.ietf-ccwg-ratelimited-increase] gives for
-   Reno, cwnd is allowed to reach maxFS + 1, so that a sender limited by
-   cwnd continues to grow even where a one-segment increase takes more
-   than one window of acknowledgements.
+   as in the limit that [RATE-LIMITED] gives for Reno, cwnd is allowed
+   to reach maxFS + 1, so that a sender limited by cwnd continues to
+   grow even where a one-segment increase takes more than one window of
+   acknowledgements.
 
    An increase of cwnd from w to w + 1 is therefore permitted when:
 
@@ -390,10 +388,10 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
    cwnd.  Conversely, an in-stack pacer might withhold emission after a
    train of acknowledgements, leaving bytes in flight below cwnd
    although the connection is still limited by the congestion window.
-   [I-D.ietf-ccwg-ratelimited-increase] updates [CUBIC], mitigating the
-   impact of such overgrowth by capping cwnd at a value derived from the
-   largest FlightSize observed, but a CUBIC sender is still required to
-   pause and resume its clock at the correct moments.
+   [RATE-LIMITED] updates [CUBIC], mitigating the impact of such
+   overgrowth by capping cwnd at a value derived from the largest
+   FlightSize observed, but a CUBIC sender is still required to pause
+   and resume its clock at the correct moments.
 
    Cuback has no clock to stop or start.  When the sender stops, the
    advance of A(w) stops with it: no acknowledgements arrive, and
@@ -405,9 +403,8 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
    protected altogether, only bounded.  Growth is governed by the amount
    of data acknowledged, as in Reno, so cwnd advances in proportion to
    what the path delivered rather than in proportion to elapsed time.
-   Applying [I-D.ietf-ccwg-ratelimited-increase] caps what remains,
-   holding cwnd to what one window of the largest FlightSize observed
-   would yield.
+   Applying [RATE-LIMITED] caps what remains, holding cwnd to what one
+   window of the largest FlightSize observed would yield.
 
 4.4.  The Reno-Friendly Estimate
 
@@ -506,7 +503,7 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
 
 7.2.  Informative References
 
-   [I-D.ietf-ccwg-ratelimited-increase]
+   [RATE-LIMITED]
               Welzl, M., Henderson, T., Fairhurst, G., and M. P.
               Tahiliani, "Increase of the Congestion Window when the
               Sender Is Rate-Limited", Work in Progress, Internet-Draft,
