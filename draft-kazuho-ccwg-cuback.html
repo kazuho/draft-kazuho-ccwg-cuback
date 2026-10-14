@@ -1447,8 +1447,8 @@ results from per-acknowledgement updates to cwnd and W_est, which depend on each
 other and on the time at which each acknowledgement arrives, making limit()
 complex to derive. Under Cuback, it is determined by A(w) alone.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-2">Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
-only when A(w + 1) - A(maxFS) does not exceed maxFS. The lower bound on D(w)
-further limits cwnd to 1.5 * maxFS. Separately, as in the limit that
+approximately when A(w + 1) - A(maxFS) does not exceed maxFS, with the lower
+bound on D(w) further limiting cwnd to 1.5 * maxFS. Separately, as in the limit that
 <span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> gives for Reno, cwnd is allowed to reach
 maxFS + 1, so that a sender limited by cwnd continues to grow even where a
 one-segment increase takes more than one window of acknowledgements.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
