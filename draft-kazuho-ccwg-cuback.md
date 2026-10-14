@@ -211,11 +211,11 @@ bandwidth, and cwnd_epoch to the values they held before the event.
 {{Section 5.8 of CUBIC}} restricts the increase of cwnd, and
 {{Section 4.2 of CUBIC}} requires that the elapsed time used by the cubic curve
 exclude application-limited periods.
-{{?I-D.ietf-ccwg-ratelimited-increase}} replaces the former and leaves the
+{{?RATE-LIMITED=I-D.ietf-ccwg-ratelimited-increase}} replaces the former and leaves the
 latter unchanged.
 
 The former applies to Cuback as it does to {{CUBIC}}. Stacks might meet it by
-applying {{I-D.ietf-ccwg-ratelimited-increase}} as described in {{rli}}. Other
+applying {{RATE-LIMITED}} as described in {{rli}}. Other
 means are also possible, such as suspending the increase while bytes in flight
 are below cwnd, as in {{Section 7.8 of ?RFC9002}}.
 
@@ -227,7 +227,7 @@ below cwnd grows only in proportion to that delivered data; see
 
 ### Applying Rate-Limited Increase {#rli}
 
-{{I-D.ietf-ccwg-ratelimited-increase}} caps cwnd at limit(maxFS), the largest
+{{RATE-LIMITED}} caps cwnd at limit(maxFS), the largest
 congestion window that the congestion controller would yield from the
 acknowledgements produced by one window of maxFS, the largest FlightSize
 observed since cwnd was last reduced. Each congestion controller defines its own
@@ -238,7 +238,7 @@ separately from cwnd, so limit() can only be approximated. Under Cuback, it is d
 Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
 only when A(w + 1) - A(maxFS) does not exceed maxFS. The lower bound on D(w)
 further limits cwnd to 1.5 * maxFS. Separately, as in the limit that
-{{I-D.ietf-ccwg-ratelimited-increase}} gives for Reno, cwnd is allowed to reach
+{{RATE-LIMITED}} gives for Reno, cwnd is allowed to reach
 maxFS + 1, so that a sender limited by cwnd continues to grow even where a
 one-segment increase takes more than one window of acknowledgements.
 
@@ -314,7 +314,7 @@ Neither edge is easy to observe. A sender might emit as many datagrams as it
 can in one pass and so appear limited by the congestion controller, even though
 its bytes in flight are below cwnd. Conversely, an in-stack pacer might withhold
 emission after a train of acknowledgements, leaving bytes in flight below cwnd
-although the connection is still limited by the congestion window. {{?I-D.ietf-ccwg-ratelimited-increase}} updates
+although the connection is still limited by the congestion window. {{RATE-LIMITED}} updates
 {{CUBIC}}, mitigating the impact of such overgrowth by capping cwnd at a value
 derived from the largest FlightSize observed, but a CUBIC sender is still
 required to pause and resume its clock at the correct moments.
@@ -328,7 +328,7 @@ A sender that keeps sending but holds less than cwnd in flight is not protected
 altogether, only bounded. Growth is governed by the amount of data acknowledged,
 as in Reno, so cwnd advances in proportion to what the path delivered rather
 than in proportion to elapsed time. Applying
-{{I-D.ietf-ccwg-ratelimited-increase}} caps what remains, holding cwnd to what
+{{RATE-LIMITED}} caps what remains, holding cwnd to what
 one window of the largest FlightSize observed would yield.
 
 ## The Reno-Friendly Estimate {#reno-estimate}
