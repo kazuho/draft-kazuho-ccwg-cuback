@@ -229,8 +229,9 @@ congestion window that the congestion controller would yield from the
 acknowledgements produced by one window of maxFS, the largest FlightSize
 observed since cwnd was last reduced. Each congestion controller defines its own
 limit(). Under {{CUBIC}}, the growth produced by a window of acknowledgements
-depends on the time over which they arrive and on W_est, which evolves
-separately from cwnd, so limit() can only be approximated. Under Cuback, it is determined by A(w) alone.
+results from per-acknowledgement updates to cwnd and W_est, which depend on each
+other and on the time at which each acknowledgement arrives, making limit()
+complex to derive. Under Cuback, it is determined by A(w) alone.
 
 Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
 only when A(w + 1) - A(maxFS) does not exceed maxFS. The lower bound on D(w)
