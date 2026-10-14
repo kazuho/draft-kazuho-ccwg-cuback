@@ -208,22 +208,19 @@ bandwidth, and cwnd_epoch to the values they held before the event.
 ## Application-Limited Senders {#app-limited}
 
 {{CUBIC}} places two separate requirements on an application-limited sender.
-{{Section 5.8 of CUBIC}} restricts the increase of cwnd, and
 {{Section 4.2 of CUBIC}} requires that the elapsed time used by the cubic curve
-exclude application-limited periods.
-{{?RATE-LIMITED=I-D.ietf-ccwg-ratelimited-increase}} replaces the former and leaves the
-latter unchanged.
+exclude application-limited periods, and {{Section 5.8 of CUBIC}} restricts the
+increase of cwnd.
 
-The former applies to Cuback as it does to {{CUBIC}}. Stacks might meet it by
-applying {{RATE-LIMITED}} as described in {{rli}}. Other
-means are also possible, such as suspending the increase while bytes in flight
-are below cwnd, as in {{Section 7.8 of ?RFC9002}}.
-
-The latter has no counterpart in Cuback, there being no clock to pause and
+The former has no counterpart in Cuback, there being no clock to pause and
 resume. Growth is governed by acknowledged data rather than by elapsed time: an
 idle sender accrues no growth, while a sender that continues to deliver data
-below cwnd grows only in proportion to that delivered data; see
-{{clock-timing}}.
+below cwnd grows only in proportion to that delivered data.
+
+The latter applies to Cuback as it does to {{CUBIC}}. Stacks might meet it by
+applying {{?RATE-LIMITED=I-D.ietf-ccwg-ratelimited-increase}} as described in
+{{rli}}. Other means are also possible, such as suspending the
+increase while bytes in flight are below cwnd, as in {{Section 7.8 of ?RFC9002}}.
 
 ### Applying Rate-Limited Increase {#rli}
 
