@@ -4,8 +4,8 @@
 
 Congestion Control Working Group                        奥 一穂 (K. Oku)
 Internet-Draft                                                    Fastly
-Intended status: Standards Track                        7 September 2026
-Expires: 11 March 2027
+Intended status: Standards Track                         14 October 2026
+Expires: 17 April 2027
 
 
                  CUBACK: CUBIC Driven by the ACK Clock
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 March 2027.
+   This Internet-Draft will expire on 17 April 2027.
 
 Copyright Notice
 
@@ -72,6 +72,7 @@ Table of Contents
      3.1.  Fast Convergence
      3.2.  Spurious Congestion Events
      3.3.  Application-Limited Senders
+       3.3.1.  Applying Rate-Limited Increase
    4.  Relationship to RFC 9438
      4.1.  Sensitivity to the Bandwidth Estimate
      4.2.  Convergence under the ACK Clock
@@ -272,16 +273,52 @@ K(W_max, cwnd_epoch) = cbrt((W_max - cwnd_epoch) / C)
 
 3.3.  Application-Limited Senders
 
-   The application-limited clock handling required by Section 4.2 of
-   [CUBIC] has no counterpart in Cuback, there being no clock to pause
-   and resume.
+   [CUBIC] places two separate requirements on an application-limited
+   sender.  Section 5.8 of [CUBIC] restricts the increase of cwnd, and
+   Section 4.2 of [CUBIC] requires that the elapsed time used by the
+   cubic curve exclude application-limited periods.
+   [I-D.ietf-ccwg-ratelimited-increase] replaces the former and leaves
+   the latter unchanged.
 
-   The rules of [I-D.ietf-ccwg-ratelimited-increase], which update
-   [CUBIC], bound the increase of a rate-limited sender without any
-   determination of its state.  Even without them, growth is governed by
-   acknowledged data rather than by elapsed time: an idle sender accrues
-   no growth, while a sender that continues to deliver data below cwnd
-   grows only in proportion to that delivered data; see Section 4.3.
+   The former applies to Cuback as it does to [CUBIC].  Stacks might
+   meet it by applying [I-D.ietf-ccwg-ratelimited-increase] as described
+   in Section 3.3.1.  Other means are also possible, such as suspending
+   the increase while bytes in flight are below cwnd, as in Section 7.8
+   of [RFC9002].
+
+   The latter has no counterpart in Cuback, there being no clock to
+   pause and resume.  Growth is governed by acknowledged data rather
+   than by elapsed time: an idle sender accrues no growth, while a
+   sender that continues to deliver data below cwnd grows only in
+   proportion to that delivered data; see Section 4.3.
+
+3.3.1.  Applying Rate-Limited Increase
+
+   [I-D.ietf-ccwg-ratelimited-increase] caps cwnd at limit(maxFS), the
+   largest congestion window that the congestion controller would yield
+   from the acknowledgements produced by one window of maxFS, the
+   largest FlightSize observed since cwnd was last reduced.  Each
+   congestion controller defines its own limit().  Under [CUBIC], the
+   growth produced by a window of acknowledgements depends on the time
+   over which they arrive and on W_est, which evolves separately from
+   cwnd, so limit() can only be approximated.  Under Cuback, it is
+   determined by A(w) alone.
+
+   Within one window of acknowledgements, cwnd can be raised from maxFS
+   to w + 1 only when A(w + 1) - A(maxFS) does not exceed maxFS.  The
+   lower bound on D(w) further limits cwnd to 1.5 * maxFS.  Separately,
+   as in the limit that [I-D.ietf-ccwg-ratelimited-increase] gives for
+   Reno, cwnd is allowed to reach maxFS + 1, so that a sender limited by
+   cwnd continues to grow even where a one-segment increase takes more
+   than one window of acknowledgements.
+
+   An increase of cwnd from w to w + 1 is therefore permitted when:
+
+   (A(w + 1) - A(maxFS) <= maxFS and w + 1 <= 1.5 * maxFS) or
+     w <= maxFS
+
+   A(w + 1) is evaluated for D(w) in any case, and A(maxFS) changes only
+   when maxFS does, so the check adds no cube root to an increase.
 
 4.  Relationship to RFC 9438
 
