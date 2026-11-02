@@ -20,18 +20,18 @@ than under CUBIC, so short flows complete earlier.
 <meta content="draft-kazuho-ccwg-cuback-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.1
-    Python 3.14.7
-    ConfigArgParse 1.7.7
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.10
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.4
+    wcwidth 0.9.2
 -->
 <link href="draft-kazuho-ccwg-cuback.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1047,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">cuback</td>
-<td class="right">September 2026</td>
+<td class="right">November 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Oku</td>
-<td class="center">Expires 29 March 2027</td>
+<td class="center">Expires 6 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1064,12 +1064,12 @@ svg {
 <dd class="internet-draft">draft-kazuho-ccwg-cuback-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-25" class="published">25 September 2026</time>
+<time datetime="2026-11-02" class="published">2 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-29">29 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-06">6 May 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1121,7 +1121,7 @@ than under CUBIC, so short flows complete earlier.<a href="#section-abstract-1" 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1167,6 +1167,11 @@ than under CUBIC, so short flows complete earlier.<a href="#section-abstract-1" 
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-application-limited-senders" class="internal xref">Application-Limited Senders</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-applying-rate-limited-incre" class="internal xref">Applying Rate-Limited Increase</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1416,14 +1421,48 @@ bandwidth, and cwnd_epoch to the values they held before the event.<a href="#sec
         <h3 id="name-application-limited-senders">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-application-limited-senders" class="section-name selfRef">Application-Limited Senders</a>
         </h3>
-<p id="section-3.3-1">The application-limited clock handling required by <span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> has
-no counterpart in Cuback, there being no clock to pause and resume.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2">The rules of <span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span>, which update <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>,
-bound the increase of a rate-limited sender without any determination of its
-state. Even without them, growth is governed by acknowledged data rather than by
-elapsed time: an idle sender accrues no growth, while a sender that continues to
-deliver data below cwnd grows only in proportion to that delivered data; see
-<a href="#clock-timing" class="auto internal xref">Section 4.3</a>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-1"><span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> places two separate requirements on an application-limited sender.
+<span><a href="https://rfc-editor.org/rfc/rfc9438#section-4.2" class="relref">Section 4.2</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> requires that the elapsed time used by the cubic curve
+exclude application-limited periods, and <span><a href="https://rfc-editor.org/rfc/rfc9438#section-5.8" class="relref">Section 5.8</a> of [<a href="#CUBIC" class="cite xref">CUBIC</a>]</span> restricts the
+increase of cwnd.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">The former has no counterpart in Cuback, there being no clock to pause and
+resume. Growth is governed by acknowledged data rather than by elapsed time: an
+idle sender accrues no growth, while a sender that continues to deliver data
+below cwnd grows only in proportion to that delivered data.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">The latter applies to Cuback as it does to <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>. Stacks might meet it by
+applying <span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> as described in
+<a href="#rli" class="auto internal xref">Section 3.3.1</a>. Other means are also possible, such as suspending the
+increase while bytes in flight are below cwnd, as in <span><a href="https://rfc-editor.org/rfc/rfc9002#section-7.8" class="relref">Section 7.8</a> of [<a href="#RFC9002" class="cite xref">RFC9002</a>]</span>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<div id="rli">
+<section id="section-3.3.1">
+          <h4 id="name-applying-rate-limited-incre">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-applying-rate-limited-incre" class="section-name selfRef">Applying Rate-Limited Increase</a>
+          </h4>
+<p id="section-3.3.1-1"><span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> caps cwnd at limit(maxFS), the largest
+congestion window that the congestion controller would yield from the
+acknowledgements produced by one window of maxFS, the largest FlightSize
+observed since cwnd was last reduced. Each congestion controller defines its own
+limit(). Under <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, the growth produced by a window of acknowledgements
+results from per-acknowledgement updates to cwnd and W_est, which depend on each
+other and on the time at which each acknowledgement arrives, making limit()
+complex to derive. Under Cuback, it is determined by A(w) alone.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">Within one window of acknowledgements, cwnd can be raised from maxFS to w + 1
+approximately when A(w + 1) - A(maxFS) does not exceed maxFS, with the lower
+bound on D(w) further limiting cwnd to 1.5 * maxFS. Separately, as in the limit that
+<span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> gives for Reno, cwnd is allowed to reach
+maxFS + 1, so that a sender limited by cwnd continues to grow even where a
+one-segment increase takes more than one window of acknowledgements.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">An increase of cwnd from w to w + 1 is therefore permitted when:<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.3.1-4">
+<pre>
+(A(w + 1) - A(maxFS) &lt;= maxFS and w + 1 &lt;= 1.5 * maxFS) or
+  w &lt;= maxFS
+</pre><a href="#section-3.3.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3.1-5">A(w + 1) is evaluated for D(w) in any case, and A(maxFS) changes only when
+maxFS does, so the check adds no cube root to an increase.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 </section>
@@ -1499,7 +1538,7 @@ is never accrued and the flow grows too slowly.<a href="#section-4.3-2" class="p
 can in one pass and so appear limited by the congestion controller, even though
 its bytes in flight are below cwnd. Conversely, an in-stack pacer might withhold
 emission after a train of acknowledgements, leaving bytes in flight below cwnd
-although the connection is still limited by the congestion window. <span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> updates
+although the connection is still limited by the congestion window. <span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> updates
 <span>[<a href="#CUBIC" class="cite xref">CUBIC</a>]</span>, mitigating the impact of such overgrowth by capping cwnd at a value
 derived from the largest FlightSize observed, but a CUBIC sender is still
 required to pause and resume its clock at the correct moments.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
@@ -1511,7 +1550,7 @@ most damage therefore does not arise.<a href="#section-4.3-4" class="pilcrow">¶
 altogether, only bounded. Growth is governed by the amount of data acknowledged,
 as in Reno, so cwnd advances in proportion to what the path delivered rather
 than in proportion to elapsed time. Applying
-<span>[<a href="#I-D.ietf-ccwg-ratelimited-increase" class="cite xref">I-D.ietf-ccwg-ratelimited-increase</a>]</span> caps what remains, holding cwnd to what
+<span>[<a href="#RATE-LIMITED" class="cite xref">RATE-LIMITED</a>]</span> caps what remains, holding cwnd to what
 one window of the largest FlightSize observed would yield.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1635,7 +1674,7 @@ could be carried forward. Together these leave a single cube root per increase.<
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="I-D.ietf-ccwg-ratelimited-increase">[I-D.ietf-ccwg-ratelimited-increase]</dt>
+<dt id="RATE-LIMITED">[RATE-LIMITED]</dt>
         <dd>
 <span class="refAuthor">Welzl, M.</span>, <span class="refAuthor">Henderson, T.</span>, <span class="refAuthor">Fairhurst, G.</span>, and <span class="refAuthor">M. P. Tahiliani</span>, <span class="refTitle">"Increase of the Congestion Window when the Sender Is Rate-Limited"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ccwg-ratelimited-increase-11</span>, <time datetime="2026-09-06" class="refDate">6 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-11">https://datatracker.ietf.org/doc/html/draft-ietf-ccwg-ratelimited-increase-11</a>&gt;</span>. </dd>
 <dd class="break"></dd>
